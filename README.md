@@ -26,3 +26,10 @@ To generate the initial files for a specific day:
 ´´´
 ./add_day_files.sh <day>
 ´´´
+
+# Code style
+The code style is defined in the .clang-format file. To run clang formatting over all c++ files:
+´´´
+./format_all_files.sh
+´´´
+
