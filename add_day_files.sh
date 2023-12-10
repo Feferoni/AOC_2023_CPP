@@ -20,10 +20,12 @@ if ! [ -f "$source_file_path" ]; then
 #include "helperFunctions.h"
 
 auto Day${day_number}::part1() -> std::string {
+    const auto input = getInput<Day${day_number}>(std::source_location::current());
     return "";
 };
 
 auto Day${day_number}::part2() -> std::string {
+    const auto input = getInput<Day${day_number}>(std::source_location::current());
     return "";
 };
 EOF
