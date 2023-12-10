@@ -6,7 +6,7 @@ To build with Ninja use the following command from repo root:
 ```
 mkdir build
 cd build
-cmake -G Ninja
+cmake -G Ninja ..
 ninja
 ```
 
