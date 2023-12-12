@@ -1,25 +1,30 @@
 BasedOnStyle: LLVM
-AccessModifierOffset: -4
+Standard: Latest
+
+# Alignment
 AlignAfterOpenBracket: Align
 AlignConsecutiveAssignments: true
 AlignConsecutiveDeclarations: true
 AlignEscapedNewlines: Left
 AlignOperands: true
 AlignTrailingComments: true
-AllowAllParametersOfDeclarationOnNextLine: true
-AllowShortBlocksOnASingleLine: false
-AllowShortCaseLabelsOnASingleLine: false
-AllowShortFunctionsOnASingleLine: Inline
-AllowShortIfStatementsOnASingleLine: false
-AllowShortLoopsOnASingleLine: false
+PointerAlignment: Left
+DerivePointerAlignment: false
+BinPackArguments: true
+BinPackParameters: true
+
+# Breaks
+AlwaysBreakTemplateDeclarations: Yes
 AlwaysBreakAfterReturnType: None
 AlwaysBreakBeforeMultilineStrings: false
-BinPackArguments: false
-BinPackParameters: false
+BreakConstructorInitializers: AfterColon
+BreakBeforeConceptDeclarations: true
+BreakInheritanceList: BeforeColon
+BreakBeforeTernaryOperators: false
 BraceWrapping:
   AfterClass: false
   AfterControlStatement: Never
-  AfterEnum: true
+  AfterEnum: false
   AfterFunction: false
   AfterNamespace: false
   AfterStruct: false
@@ -28,9 +33,52 @@ BraceWrapping:
   BeforeElse: false
   BeforeLambdaBody: false
 BreakBeforeBraces: Custom
-ColumnLimit: 120
-ConstructorInitializerAllOnOneLineOrOnePerLine: true
-DerivePointerAlignment: false
+
+# Spaces/Tabs
+SpacesBeforeTrailingComments: 2
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+IndentRequires: true
+ColumnLimit: 80
+LambdaBodyIndentation: OuterScope
+
+# Spaces
+SpaceAfterCStyleCast: true
+SpaceAfterTemplateKeyword: true
+SpaceBeforeAssignmentOperators: true
+SpaceBeforeParens: ControlStatements
+SpaceInEmptyParentheses: false
+SpacesInAngles: false
+SpacesInContainerLiterals: true
+SpacesInCStyleCastParentheses: false
+SpacesInParentheses: false
+SpacesInSquareBrackets: false
+
+# Constructors
+ConstructorInitializerAllOnOneLineOrOnePerLine: false
+
+# AllowShortOnASingleLine
+AllowShortBlocksOnASingleLine: false
+AllowShortCaseLabelsOnASingleLine: true
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+AllowShortLambdasOnASingleLine: true
+AllowShortEnumsOnASingleLine: false
+AllowShortCompoundRequirementOnASingleLine: true
+
+# Penalties
+PenaltyExcessCharacter: 0
+PenaltyBreakBeforeFirstCallParameter: 0
+PenaltyReturnTypeOnItsOwnLine: 0
+PenaltyBreakAssignment: 1000
+
+# Other
+RemoveParentheses: Leave
+AccessModifierOffset: -4
+AllowAllParametersOfDeclarationOnNextLine: true
+Cpp11BracedListStyle: true
 IncludeBlocks: Regroup
 IncludeCategories:
   - Regex:           '^<.*\.h>'
@@ -41,24 +89,8 @@ IncludeCategories:
     Priority:        1
   - Regex:           '^".*'
     Priority:        2
-IndentWidth: 4
 KeepEmptyLinesAtTheStartOfBlocks: false
 MaxEmptyLinesToKeep: 1
-NamespaceIndentation: All
-PointerAlignment: Right
+NamespaceIndentation: None
 ReflowComments: true
 SortIncludes: true
-SpaceAfterCStyleCast: true
-SpaceAfterTemplateKeyword: true
-SpaceBeforeAssignmentOperators: true
-SpaceBeforeParens: ControlStatements
-SpaceInEmptyParentheses: false
-SpacesBeforeTrailingComments: 2
-SpacesInAngles: false
-SpacesInContainerLiterals: true
-SpacesInCStyleCastParentheses: false
-SpacesInParentheses: false
-SpacesInSquareBrackets: false
-Standard: Cpp11
-TabWidth: 4
-UseTab: Never

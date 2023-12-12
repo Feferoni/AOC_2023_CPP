@@ -8,23 +8,24 @@
 #include "helperFunctions.h"
 
 namespace {
-    constexpr char patternString[] = "static std::string Day\\d+::(.*)\\(\\)";
+constexpr char
+    functionNamePatternString[] = "static std::string Day\\d+::(.*)\\(\\)";
 }
 
 // could fetch the class name and function here, but to lazy to fix
-std::string extractDayFromfunctionName(const std::string &functionSignature) {
+auto extractDayFromfunctionName(const std::string& functionSignature) -> std::string {
     std::smatch matches;
-    if (std::regex_search(functionSignature, matches, std::regex(patternString)) && !matches.empty()) {
+    if (std::regex_search(functionSignature, matches, std::regex(functionNamePatternString)) &&
+        !matches.empty()) {
         return matches[1];
     }
 
-    std::cerr << "Could not extract a day from the function: " << functionSignature << " with regex: " << patternString
-              << '\n';
+    std::cerr << "Could not extract a day from the function: " << functionSignature << " with regex: " << functionNamePatternString << '\n';
     std::abort();
 }
 
-auto getFilePath(const std::source_location &location, const std::string &day) -> std::string {
-    const auto part        = extractDayFromfunctionName(location.function_name());
+auto getFilePath(const std::source_location& location, const std::string& day) -> std::string {
+    const auto part = extractDayFromfunctionName(location.function_name());
     const auto currentPath = std::string(std::filesystem::current_path());
 
     if (IsTest::isTest) {
@@ -34,7 +35,7 @@ auto getFilePath(const std::source_location &location, const std::string &day) -
     }
 }
 
-auto getInputFromFile(const std::string &filePath) -> std::vector<std::string> {
+auto getInputFromFile(const std::string& filePath) -> std::vector<std::string> {
     std::vector<std::string> lines;
     std::ifstream            file(filePath);
     if (file.is_open()) {
@@ -49,4 +50,21 @@ auto getInputFromFile(const std::string &filePath) -> std::vector<std::string> {
     }
 
     return lines;
+}
+
+[[nodiscard]] auto splitStrToStrView(const std::string_view& str, const std::string_view& delimiter) -> std::vector<std::string_view> {
+    std::vector<std::string_view> result;
+    size_t                        start = 0;
+    size_t                        end   = str.find(delimiter);
+
+    while (end != std::string::npos) {
+        std::string_view token = std::string_view(str.data() + start, end - start);
+        result.push_back(token);
+        start = end + delimiter.length();
+        end   = str.find(delimiter, start);
+    }
+
+    result.push_back(std::string_view(str.data() + start, str.length() - start));
+
+    return result;
 }
