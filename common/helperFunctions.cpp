@@ -29,7 +29,7 @@ auto getFilePath(const std::source_location& location, const std::string& day) -
     const auto currentPath = std::string(std::filesystem::current_path());
 
     if (IsTest::isTest) {
-        return currentPath + "/../../input/" + day + "_" + part + "_example.txt";
+        return currentPath + "/../input/" + day + "_" + part + "_example.txt";
     } else {
         return currentPath + "/../input/" + day + ".txt";
     }

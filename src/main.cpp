@@ -6,6 +6,7 @@
 
 #include "day1.h"
 #include "day2.h"
+#include "day3.h"
 #include "helperFunctions.h"
 
 bool IsTest::isTest = false;
@@ -45,6 +46,7 @@ static_assert(&printSolutionFor<Day1>, "Must fulfill concept");
 auto main() -> int {
     printSolutionFor<Day1>();
     printSolutionFor<Day2>();
+    printSolutionFor<Day3>();
 
     return 0;
 }

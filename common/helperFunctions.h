@@ -9,8 +9,19 @@
 
 #include <cxxabi.h>
 
+// TODO: do this in a better way if you ever get time.
 struct IsTest {
     static bool isTest;
+};
+
+struct Position {
+    int32_t x;
+    int32_t y;
+
+    friend std::ostream& operator<<(std::ostream& os, const Position& p) {
+        os << "x: " << std::to_string(p.x) << " y: " << std::to_string(p.y);
+        return os;
+    }
 };
 
 template <typename T>
