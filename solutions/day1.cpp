@@ -1,14 +1,10 @@
 #include <cctype>
+#include <ranges>
 
 #include "day1.h"
-
 #include "helperFunctions.h"
 
-#include "map"
-
-auto Day1::part1() -> std::string {
-    const auto input = getInput<Day1>(std::source_location::current());
-
+[[nodiscard]] auto getSumOfNumbers(const auto& input) -> std::string {
     std::uint32_t sum = 0;
     for (const auto& line : input) {
         auto isDigit = [](const char c) { return std::isdigit(c); };
@@ -20,61 +16,45 @@ auto Day1::part1() -> std::string {
     }
 
     return std::to_string(sum);
-};
-
-std::map<std::string, std::int32_t> conversionTable = {
-    {"one", 1}, {"two", 2},   {"three", 3}, {"four", 4}, {"five", 5},
-    {"six", 6}, {"seven", 7}, {"eight", 8}, {"nine", 9},
-};
-
-[[nodiscard]] auto findFirstDigit(const std::string& line) -> std::string {
-    for (uint32_t i = 0; i < line.size(); i++) {
-        auto previous = line.substr(0, i);
-        for (const auto& [alphaNumber, digit] : conversionTable) {
-            auto it = previous.find(alphaNumber);
-            if (it != std::string::npos) {
-                return std::to_string(digit);
-            }
-        }
-
-        char c = line.at(i);
-        if (std::isdigit(c)) {
-            return std::string{c};
-        }
-    }
-
-    return "";
 }
 
-[[nodiscard]] auto findLastDigit(const std::string& line) -> std::string {
-    for (uint32_t i = line.size() - 1; 0 <= i; i--) {
-        auto previous = line.substr(i, line.size() - 1);
-        for (const auto& [alphaNumber, digit] : conversionTable) {
-            auto it = previous.find(alphaNumber);
-            if (it != std::string::npos) {
-                return std::to_string(digit);
-            }
-        }
+auto Day1::part1() -> std::string {
+    const auto input = getInput<Day1>(std::source_location::current());
+    return getSumOfNumbers(input);
+};
 
-        char c = line.at(i);
-        if (std::isdigit(c)) {
-            return std::string{c};
+constexpr std::array<std::pair<std::string_view, std::string_view>, 15> conversionTable = {
+    std::pair{"eightwo", "82"},
+    std::pair{"eighthree", "83"},
+    std::pair{"oneight", "18"},
+    std::pair{"fiveight", "58"},
+    std::pair{"threeight", "38"},
+    std::pair{"twone", "21"},
+    std::pair{"one", "1"},
+    std::pair{"two", "2"},
+    std::pair{"three", "3"},
+    std::pair{"four", "4"},
+    std::pair{"five", "5"},
+    std::pair{"six", "6"},
+    std::pair{"seven", "7"},
+    std::pair{"eight", "8"},
+    std::pair{"nine", "9"}
+};
+
+[[nodiscard]] auto replaceAlpahNumbers(const std::string& input) {
+    std::string result = input;
+    for (const auto& [searchFor, replaceWith] : conversionTable) {
+        size_t startPos = 0;
+        while ((startPos = result.find(searchFor, startPos)) != std::string::npos) {
+            result.replace(startPos, searchFor.length(), replaceWith);
+            startPos += replaceWith.length();
         }
     }
-
-    return "";
+    return result;
 }
 
 auto Day1::part2() -> std::string {
     const auto input = getInput<Day1>(std::source_location::current());
-
-    std::uint32_t sum = 0;
-    for (const auto& line : input) {
-        const auto first  = findFirstDigit(line);
-        const auto last   = findLastDigit(line);
-        const auto number = first + last;
-        sum += std::stoul(number);
-    }
-
-    return std::to_string(sum);
+    const auto convertedInput = input | std::views::transform(replaceAlpahNumbers);
+    return getSumOfNumbers(convertedInput);
 };
