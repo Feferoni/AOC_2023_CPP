@@ -2,6 +2,7 @@
 #include <optional>
 
 #include "day3.h"
+
 #include "helperFunctions.h"
 
 namespace {
@@ -34,7 +35,7 @@ constexpr std::array<Position, 8> directions = {Position{ 1,  0},  // right
     }
 
     return std::ranges::any_of(validRanges, [&c](const std::pair<uint32_t, uint32_t>& minMax) {
-        return minMax.first <= c && c <= minMax.second;
+        return minMax.first <= static_cast<uint32_t>(c) && static_cast<uint32_t>(c) <= minMax.second;
     });
 }
 
@@ -68,9 +69,8 @@ constexpr std::array<Position, 8> directions = {Position{ 1,  0},  // right
     uint32_t    sum                      = 0;
     bool        foundAdjecentValidSymbol = false;
     std::string currentNumber            = "";
-    for (size_t y = 0; y <= positionLimit.y; y++) {
-        const auto& currentLine = input.at(y);
-        for (size_t x = 0; x <= positionLimit.x; x++) {
+    for (int32_t y = 0; y <= positionLimit.y; y++) {
+        for (int32_t x = 0; x <= positionLimit.x; x++) {
             const Position currentPosition{static_cast<int32_t>(x), static_cast<int32_t>(y)};
             const char currentChar = getCharFromInput(input, currentPosition, positionLimit, std::source_location::current());
             if (std::isdigit(currentChar)) {
@@ -116,8 +116,8 @@ struct NumberData {
                                     static_cast<int32_t>(input.size() - 1)};
     std::vector<Position> gearPositions;
 
-    for (size_t y = 0; y <= positionLimit.y; y++) {
-        for (size_t x = 0; x <= positionLimit.x; x++) {
+    for (int32_t y = 0; y <= positionLimit.y; y++) {
+        for (int32_t x = 0; x <= positionLimit.x; x++) {
             const Position position{static_cast<int32_t>(x), static_cast<int32_t>(y)};
             const auto currentChar = getCharFromInput(input, position, positionLimit, std::source_location::current());
             if (currentChar == 42) {
@@ -135,7 +135,7 @@ struct NumberData {
     std::vector<NumberData> numberDatas;
 
     std::optional<NumberData> currentNumberData = std::nullopt;
-    for (size_t y = 0; y <= positionLimit.y; y++) {
+    for (int32_t y = 0; y <= positionLimit.y; y++) {
         const auto checkNumberDataEnd = [&currentNumberData, &input, &numberDatas]() {
             if (currentNumberData.has_value()) {
                 const auto& currentLine = input.at(
@@ -149,7 +149,7 @@ struct NumberData {
             }
         };
 
-        for (size_t x = 0; x <= positionLimit.x; x++) {
+        for (int32_t x = 0; x <= positionLimit.x; x++) {
             const Position position{static_cast<int32_t>(x), static_cast<int32_t>(y)};
             const auto currentChar = getCharFromInput(input, position, positionLimit, std::source_location::current());
             if (std::isdigit(currentChar)) {

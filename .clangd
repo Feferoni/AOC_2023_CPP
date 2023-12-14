@@ -1,0 +1,5 @@
+CompileFlags:
+  Add: [-Wall, -Wextra]
+Diagnostics:
+  ClangTidy:
+    Checks: '-*,llvm-*,clang-analyzer-*,modernize-*'
