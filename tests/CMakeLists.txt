@@ -1,10 +1,12 @@
 cmake_minimum_required(VERSION 3.10)
 project(tests)
 
-include(FetchContent)
 
+include(FetchContent)
+set(FETCHCONTENT_BASE_DIR ${CMAKE_SOURCE_DIR}/cached_dependencies)
 FetchContent_Declare(
   catch2
+  SYSTEM
   GIT_REPOSITORY https://github.com/catchorg/Catch2.git
   GIT_TAG v3.4.0
 )
@@ -32,7 +34,8 @@ set(SOURCE_FILES
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 
-target_compile_options(${PROJECT_NAME} PRIVATE -O0)
+target_compile_options(${PROJECT_NAME} PRIVATE -O0 -fsanitize=address,undefined -fno-omit-frame-pointer)
+target_link_options(${PROJECT_NAME} PRIVATE -fsanitize=address,undefined)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE Catch2::Catch2WithMain)
 

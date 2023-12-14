@@ -11,11 +11,14 @@
 
 bool IsTest::isTest = false;
 
+namespace {
 template <class Day>
 concept Solution = requires() {
     { Day::part1() } -> std::same_as<std::string>;
     { Day::part2() } -> std::same_as<std::string>;
 };
+
+static_assert(Solution<Day1>, "Must fulfill concept");
 
 struct RunData {
     std::string               answer;
@@ -40,8 +43,8 @@ auto printSolutionFor() -> void {
     std::cout << className << "::part1 " << executePart(Day::part1) << '\n';
     std::cout << className << "::part2 " << executePart(Day::part2) << '\n';
 }
+}
 
-static_assert(&printSolutionFor<Day1>, "Must fulfill concept");
 
 auto main() -> int {
     printSolutionFor<Day1>();

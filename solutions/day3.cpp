@@ -16,7 +16,6 @@ constexpr std::array<Position, 8> directions = {Position{ 1,  0},  // right
                                                 Position{ 1, -1},  // down; right
                                                 Position{-1, -1}}; // down, left
 // clang-format on
-}  // namespace
 
 [[nodiscard]] auto getNewPosition(const Position& current, const Position& direction, const Position& positionLimit) -> std::optional<Position> {
     Position newPosition{current.x + direction.x, current.y + direction.y};
@@ -41,8 +40,8 @@ constexpr std::array<Position, 8> directions = {Position{ 1,  0},  // right
 
 [[nodiscard]] auto getCharFromInput(const std::vector<std::string>& input, const Position& position, const Position& positionLimit, const std::source_location& caller) -> char {
     try {
-        return input.at(position.y).at(position.x);
-    } catch (std::out_of_range ex) {
+        return input.at(static_cast<uint32_t>(position.y)).at(static_cast<uint32_t>(position.x));
+    } catch (const std::out_of_range& ex) {
         std::cerr << ex.what() << ": " << caller.function_name() << " current position: " << positionLimit << " limit: " << positionLimit << '\n';
         std::abort();
     }
@@ -95,17 +94,12 @@ constexpr std::array<Position, 8> directions = {Position{ 1,  0},  // right
     return std::to_string(sum);
 }
 
-auto Day3::part1() -> std::string {
-    const auto input = getInput<Day3>(std::source_location::current());
-    return sumOfPartNumbers(input);
-};
-
 struct NumberData {
     Position startPosition;
     Position endPosition;
     uint32_t number;
 
-    friend std::ostream& operator<<(std::ostream& os, const NumberData& nd) {
+    [[maybe_unused]]friend std::ostream& operator<<(std::ostream& os, const NumberData& nd) {
         os << "NumberData startPos: " << nd.startPosition << " endPos: " << nd.endPosition << " Number: " << nd.number;
         return os;
     }
@@ -209,6 +203,13 @@ struct NumberData {
 
     return std::to_string(sum);
 }
+}  // namespace
+
+
+auto Day3::part1() -> std::string {
+    const auto input = getInput<Day3>(std::source_location::current());
+    return sumOfPartNumbers(input);
+};
 
 auto Day3::part2() -> std::string {
     const auto input = getInput<Day3>(std::source_location::current());

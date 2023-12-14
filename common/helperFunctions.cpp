@@ -10,7 +10,6 @@
 namespace {
 constexpr char
     functionNamePatternString[] = "static std::string Day\\d+::(.*)\\(\\)";
-}
 
 // could fetch the class name and function here, but to lazy to fix
 auto extractDayFromfunctionName(const std::string& functionSignature) -> std::string {
@@ -23,6 +22,7 @@ auto extractDayFromfunctionName(const std::string& functionSignature) -> std::st
     std::cerr << "Could not extract a day from the function: " << functionSignature << " with regex: " << functionNamePatternString << '\n';
     std::abort();
 }
+}  // namespace
 
 auto getFilePath(const std::source_location& location, const std::string& day) -> std::string {
     const auto part = extractDayFromfunctionName(location.function_name());

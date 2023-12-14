@@ -11,14 +11,13 @@
 namespace {
 constexpr char saveGrabbedCubesPattern[] = "Game (\\d+): (.*)";
 constexpr char getColorInfoPattern[]     = "\\W*?(\\d+) (\\S+)";
-}  // namespace
 
 struct ColoredCubes {
     uint32_t blue  = 0;
     uint32_t red   = 0;
     uint32_t green = 0;
 
-    friend std::ostream& operator<<(std::ostream& os, const ColoredCubes& g) {
+    [[maybe_unused]] friend std::ostream& operator<<(std::ostream& os, const ColoredCubes& g) {
         os << "{blue: " << g.blue << " red: " << g.red << " green: " << g.green << "}";
         return os;
     }
@@ -28,7 +27,8 @@ struct Game {
     std::vector<ColoredCubes> grab;
     uint32_t                  nr = 0;
 
-    friend std::ostream& operator<<(std::ostream& os, const Game& g) {
+
+    [[maybe_unused]] friend std::ostream& operator<<(std::ostream& os, const Game& g) {
         os << "\nGameNumber: " << g.nr << " grabs: " << g.grab;
         return os;
     }
@@ -91,6 +91,9 @@ enum class Color : int {
         case Color::GREEN: cubes.green += count; break;
         case Color::RED: cubes.red += count; break;
         case Color::BLUE: cubes.blue += count; break;
+        default:
+            std::cerr << "Faulty enum color: " << static_cast<uint32_t>(color) << '\n';
+            std::abort();
         }
     }
 
@@ -137,14 +140,6 @@ enum class Color : int {
     return result;
 }
 
-auto Day2::part1() -> std::string {
-    const auto input = getInput<Day2>(std::source_location::current());
-    const auto games = getGames(input);
-
-    const ColoredCubes gameConfiguration{13, 12, 14};
-    return std::to_string(playGamePart1(games, gameConfiguration));
-};
-
 auto setValueIfLarger(std::optional<uint32_t>& valueToSet, const auto currentValue) -> void {
     if (currentValue > valueToSet.value_or(0)) {
         valueToSet = currentValue;
@@ -172,6 +167,17 @@ auto setValueIfLarger(std::optional<uint32_t>& valueToSet, const auto currentVal
     });
     return result;
 }
+}  // namespace
+
+
+auto Day2::part1() -> std::string {
+    const auto input = getInput<Day2>(std::source_location::current());
+    const auto games = getGames(input);
+
+    const ColoredCubes gameConfiguration{13, 12, 14};
+    return std::to_string(playGamePart1(games, gameConfiguration));
+};
+
 
 auto Day2::part2() -> std::string {
     const auto input  = getInput<Day2>(std::source_location::current());
