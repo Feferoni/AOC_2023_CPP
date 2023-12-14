@@ -62,11 +62,10 @@ ConstructorInitializerAllOnOneLineOrOnePerLine: false
 AllowShortBlocksOnASingleLine: false
 AllowShortCaseLabelsOnASingleLine: true
 AllowShortFunctionsOnASingleLine: Inline
-AllowShortIfStatementsOnASingleLine: false
+AllowShortIfStatementsOnASingleLine: AllIfsAndElse
 AllowShortLoopsOnASingleLine: false
 AllowShortLambdasOnASingleLine: true
 AllowShortEnumsOnASingleLine: false
-AllowShortCompoundRequirementOnASingleLine: true
 
 # Penalties
 PenaltyExcessCharacter: 0

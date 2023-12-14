@@ -14,9 +14,9 @@ constexpr char getColorInfoPattern[]     = "\\W*?(\\d+) (\\S+)";
 }  // namespace
 
 struct ColoredCubes {
-    uint32_t blue;
-    uint32_t red;
-    uint32_t green;
+    uint32_t blue  = 0;
+    uint32_t red   = 0;
+    uint32_t green = 0;
 
     friend std::ostream& operator<<(std::ostream& os, const ColoredCubes& g) {
         os << "{blue: " << g.blue << " red: " << g.red << " green: " << g.green << "}";
@@ -25,8 +25,8 @@ struct ColoredCubes {
 };
 
 struct Game {
-    uint32_t                  nr;
     std::vector<ColoredCubes> grab;
+    uint32_t                  nr = 0;
 
     friend std::ostream& operator<<(std::ostream& os, const Game& g) {
         os << "\nGameNumber: " << g.nr << " grabs: " << g.grab;
@@ -41,16 +41,12 @@ enum class Color : int {
 };
 
 [[nodiscard]] auto getColor(const std::string str) -> Color {
-    if (str == "green") {
-        return Color::GREEN;
-    } else if (str == "blue") {
-        return Color::BLUE;
-    } else if (str == "red") {
-        return Color::RED;
-    } else {
-        std::cerr << "Faulty color: " << str << '\n';
-        std::abort();
-    }
+    if (str == "green") return Color::GREEN;
+    if (str == "blue") return Color::BLUE;
+    if (str == "red") return Color::RED;
+
+    std::cerr << "Faulty color: " << str << '\n';
+    std::abort();
 }
 
 [[nodiscard]] auto splitGameAndGrabs(const std::string& line) -> std::pair<uint32_t, std::string> {
@@ -86,8 +82,7 @@ enum class Color : int {
 }
 
 [[nodiscard]] auto convertToGrabbedCubes(const std::string_view str) -> ColoredCubes {
-    const auto colorsInfo = splitStrToStrView(str, ",");
-
+    const auto   colorsInfo = splitStrToStrView(str, ",");
     ColoredCubes cubes{};
 
     for (const auto& colorInfo : colorsInfo) {
@@ -106,9 +101,7 @@ enum class Color : int {
     const auto [gameNr, gameInfo] = splitGameAndGrabs(line);
     const auto eachGrab           = splitStrToStrView(gameInfo, ";");
 
-    Game currentGame;
-    currentGame.nr = gameNr;
-
+    Game currentGame{{}, gameNr};
     std::transform(
         eachGrab.begin(), eachGrab.end(), std::back_inserter(currentGame.grab), convertToGrabbedCubes);
 
@@ -117,9 +110,9 @@ enum class Color : int {
 
 [[nodiscard]] auto getGames(const std::vector<std::string>& input) -> std::vector<Game> {
     std::vector<Game> games;
-    for (const auto& line : input) {
-        games.push_back(parseLineIntoGameInfo(line));
-    }
+    std::ranges::transform(input, std::back_inserter(games), [](const std::string& line) -> Game {
+        return parseLineIntoGameInfo(line);
+    });
     return games;
 }
 
@@ -136,8 +129,8 @@ enum class Color : int {
 [[nodiscard]] auto playGamePart1(const std::vector<Game>& games, const ColoredCubes& gameConfiguration) -> uint32_t {
     uint32_t result = 0;
     std::ranges::for_each(games, [&result, &gameConfiguration](const auto& game) {
-        const auto gameResult = isGamePossible(game, gameConfiguration);
-        if (gameResult.has_value()) {
+        if (const auto gameResult = isGamePossible(game, gameConfiguration);
+            gameResult.has_value()) {
             result += *gameResult;
         }
     });
@@ -149,12 +142,11 @@ auto Day2::part1() -> std::string {
     const auto games = getGames(input);
 
     const ColoredCubes gameConfiguration{13, 12, 14};
-    const auto         result = playGamePart1(games, gameConfiguration);
-    return std::to_string(result);
+    return std::to_string(playGamePart1(games, gameConfiguration));
 };
 
 auto setValueIfLarger(std::optional<uint32_t>& valueToSet, const auto currentValue) -> void {
-    if (!valueToSet.has_value() || currentValue > *valueToSet) {
+    if (currentValue > valueToSet.value_or(0)) {
         valueToSet = currentValue;
     }
 }

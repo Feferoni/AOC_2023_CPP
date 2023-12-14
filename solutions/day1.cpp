@@ -2,6 +2,7 @@
 #include <ranges>
 
 #include "day1.h"
+
 #include "helperFunctions.h"
 
 [[nodiscard]] auto getSumOfNumbers(const auto& input) -> std::string {
@@ -23,23 +24,14 @@ auto Day1::part1() -> std::string {
     return getSumOfNumbers(input);
 };
 
-constexpr std::array<std::pair<std::string_view, std::string_view>, 15> conversionTable = {
-    std::pair{"eightwo", "82"},
-    std::pair{"eighthree", "83"},
-    std::pair{"oneight", "18"},
-    std::pair{"fiveight", "58"},
-    std::pair{"threeight", "38"},
-    std::pair{"twone", "21"},
-    std::pair{"one", "1"},
-    std::pair{"two", "2"},
-    std::pair{"three", "3"},
-    std::pair{"four", "4"},
-    std::pair{"five", "5"},
-    std::pair{"six", "6"},
-    std::pair{"seven", "7"},
-    std::pair{"eight", "8"},
-    std::pair{"nine", "9"}
-};
+constexpr std::array<std::pair<std::string_view, std::string_view>, 15> conversionTable = {std::pair{"eightwo", "82"},   std::pair{"eighthree", "83"},
+                                                                                           std::pair{"oneight", "18"},   std::pair{"fiveight", "58"},
+                                                                                           std::pair{"threeight", "38"}, std::pair{"twone", "21"},
+                                                                                           std::pair{"one", "1"},        std::pair{"two", "2"},
+                                                                                           std::pair{"three", "3"},      std::pair{"four", "4"},
+                                                                                           std::pair{"five", "5"},       std::pair{"six", "6"},
+                                                                                           std::pair{"seven", "7"},      std::pair{"eight", "8"},
+                                                                                           std::pair{"nine", "9"}};
 
 [[nodiscard]] auto replaceAlpahNumbers(const std::string& input) {
     std::string result = input;
