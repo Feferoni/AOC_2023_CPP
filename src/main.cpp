@@ -19,10 +19,10 @@ concept Solution = requires() {
 
 struct RunData {
     std::string               answer;
-    std::chrono::milliseconds runTime;
+    std::chrono::microseconds runTime;
 
     friend std::ostream& operator<<(std::ostream& os, const RunData& rd) {
-        os << "Answer: " << rd.answer << " Elapsed time (ms): " << rd.runTime.count();
+        os << "Answer: " << rd.answer << " Elapsed time (micro seconds): " << rd.runTime.count();
         return os;
     }
 };
@@ -31,7 +31,7 @@ auto executePart(const std::function<std::string()>& function) -> RunData {
     const auto start         = std::chrono::high_resolution_clock::now();
     const auto part1Solution = function();
     const auto end           = std::chrono::high_resolution_clock::now();
-    return {part1Solution, std::chrono::duration_cast<std::chrono::milliseconds>(end - start)};
+    return {part1Solution, std::chrono::duration_cast<std::chrono::microseconds>(end - start)};
 }
 
 template <Solution Day>
