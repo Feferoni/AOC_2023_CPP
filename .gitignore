@@ -1,3 +1,4 @@
 .cache/*
 build/*
 dep_cache/*
+cached_dependencies/*
