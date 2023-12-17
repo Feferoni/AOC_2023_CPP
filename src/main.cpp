@@ -1,6 +1,7 @@
 #include <chrono>
 #include <concepts>
 #include <functional>
+#include <iomanip>
 #include <iostream>
 #include <string>
 
@@ -25,7 +26,23 @@ struct RunData {
     std::chrono::microseconds runTime;
 
     friend std::ostream& operator<<(std::ostream& os, const RunData& rd) {
-        os << "Answer: " << rd.answer << " Elapsed time (micro seconds): " << rd.runTime.count();
+        auto micros = rd.runTime.count();
+        auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(rd.runTime).count();
+        auto secs = std::chrono::duration_cast<std::chrono::seconds>(rd.runTime).count();
+        auto mins = std::chrono::duration_cast<std::chrono::minutes>(rd.runTime).count();
+        auto hours = std::chrono::duration_cast<std::chrono::hours>(rd.runTime).count();
+
+        micros %= 1000;  // Remaining microseconds
+        millis %= 1000;  // Remaining milliseconds
+        secs %= 60;      // Remaining seconds
+        mins %= 60;      // Remaining minutes
+
+        os << "Answer: " << rd.answer;
+        os << " Elapsed time: " << std::setfill('0') << std::setw(2) << hours << ":";
+        os << std::setfill('0') << std::setw(2) << mins << ":";
+        os << std::setfill('0') << std::setw(2) << secs << ":";
+        os << std::setfill('0') << std::setw(3) << millis << ":";
+        os << std::setfill('0') << std::setw(3) << micros;
         return os;
     }
 };
@@ -43,8 +60,7 @@ auto printSolutionFor() -> void {
     std::cout << className << "::part1 " << executePart(Day::part1) << '\n';
     std::cout << className << "::part2 " << executePart(Day::part2) << '\n';
 }
-}
-
+}  // namespace
 
 auto main() -> int {
     printSolutionFor<Day1>();

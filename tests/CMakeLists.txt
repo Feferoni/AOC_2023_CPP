@@ -3,7 +3,7 @@ project(tests)
 
 
 include(FetchContent)
-set(FETCHCONTENT_BASE_DIR ${CMAKE_SOURCE_DIR}/cached_dependencies)
+set(FETCHCONTENT_BASE_DIR ${CMAKE_SOURCE_DIR}/dep_cache)
 FetchContent_Declare(
   catch2
   SYSTEM

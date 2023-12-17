@@ -18,6 +18,16 @@ struct Position {
     int32_t x;
     int32_t y;
 
+    [[nodiscard]] inline auto isWithinBounds(const Position& lower, const Position& upper) -> bool {
+        bool isXwithinBound = lower.x <= x && x <= upper.x;
+        bool isYwithinBound = lower.y <= y && y <= upper.y;
+        return isXwithinBound && isYwithinBound;
+    }
+
+    Position operator+(const Position& other) const {
+        return {x + other.x, y + other.y};
+    }
+
     friend std::ostream& operator<<(std::ostream& os, const Position& p) {
         os << "x: " << std::to_string(p.x) << " y: " << std::to_string(p.y);
         return os;
