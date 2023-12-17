@@ -8,6 +8,7 @@
 #include "day1.h"
 #include "day2.h"
 #include "day3.h"
+#include "day4.h"
 #include "helperFunctions.h"
 
 bool IsTest::isTest = false;
@@ -66,6 +67,7 @@ auto main() -> int {
     printSolutionFor<Day1>();
     printSolutionFor<Day2>();
     printSolutionFor<Day3>();
+    printSolutionFor<Day4>();
 
     return 0;
 }

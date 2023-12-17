@@ -36,6 +36,8 @@ add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 
 target_compile_options(${PROJECT_NAME} PRIVATE -O0 -fsanitize=address,undefined -fno-omit-frame-pointer)
 target_link_options(${PROJECT_NAME} PRIVATE -fsanitize=address,undefined)
+# target_compile_options(${PROJECT_NAME} PRIVATE)
+# target_link_options(${PROJECT_NAME} PRIVATE)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE Catch2::Catch2WithMain)
 

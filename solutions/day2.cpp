@@ -82,7 +82,7 @@ enum class Color : int {
 }
 
 [[nodiscard]] auto convertToGrabbedCubes(const std::string_view str) -> ColoredCubes {
-    const auto   colorsInfo = splitStrToStrView(str, ",");
+    const auto   colorsInfo = splitStrToStrViews(str, ",");
     ColoredCubes cubes{};
 
     for (const auto& colorInfo : colorsInfo) {
@@ -102,7 +102,7 @@ enum class Color : int {
 
 [[nodiscard]] auto parseLineIntoGameInfo(const std::string& line) -> Game {
     const auto [gameNr, gameInfo] = splitGameAndGrabs(line);
-    const auto eachGrab           = splitStrToStrView(gameInfo, ";");
+    const auto eachGrab           = splitStrToStrViews(gameInfo, ";");
 
     Game currentGame{{}, gameNr};
     std::transform(

@@ -52,28 +52,58 @@ auto getInput(const std::source_location location) -> std::vector<std::string> {
     return getInputFromFile(filePath);
 }
 
+[[nodiscard]] auto splitString(const std::string& str, const std::string& delimiter) -> std::vector<std::string>;
+
+[[nodiscard]] auto splitStrToStrViews(const std::string_view& str, const std::string_view& delimiter) -> std::vector<std::string_view>;
+
+// Templated functions to be able to print containers
+template<class T>
+struct is_streamable {
+    static std::false_type test(...);
+
+    template<class U>
+    static auto test(const U& u) -> decltype(std::declval<std::ostream&>() << u,
+                                             std::true_type{});
+
+    static constexpr bool value = decltype(test(std::declval<T>()))::value;
+};
+
+template<class T>
+inline constexpr bool is_streamable_v = is_streamable<T>::value;
+
+template <template <typename, typename...> class ContainerType,
+          typename ValueType, typename... Args>
+std::enable_if_t<!is_streamable_v<ContainerType<ValueType, Args...>>,
+                 std::ostream&>
+operator<<(std::ostream& os, ContainerType<ValueType, Args...>& container) {
+    os << "{";
+    bool commoFlag = false;
+    for (auto const& obj : container) {
+        os << (commoFlag ? ", " : "") << obj;
+        commoFlag = true;
+    }
+    os << "}";
+    return os;
+}
+
 template <typename T>
 concept IterableContainer = requires(T a) {
     { a.begin() } -> std::input_iterator;
     { a.end() } -> std::input_iterator;
+    { a.cbegin() } -> std::input_iterator;
+    { a.cend() } -> std::input_iterator;
 } && !std::same_as<T, std::string> && !std::same_as<T, std::string_view>;
 
 template <IterableContainer T>
 std::ostream& operator<<(std::ostream& os, const T& container) {
-    os << "[";
-
-    auto it = container.begin();
-    if (it != container.end()) {
-        os << *it;
-        ++it;
+    os << "{";
+    bool commoFlag = false;
+    for (auto const& obj : container) {
+        os << (commoFlag ? ", " : "") << obj;
+        commoFlag = true;
     }
-
-    for (; it != container.end(); ++it) {
-        os << ", " << *it;
-    }
-
-    os << "]";
+    os << "}";
     return os;
 }
 
-[[nodiscard]] auto splitStrToStrView(const std::string_view& str, const std::string_view& delimiter) -> std::vector<std::string_view>;
+
