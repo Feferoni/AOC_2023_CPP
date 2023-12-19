@@ -65,7 +65,6 @@ auto getInputFromFile(const std::string& filePath) -> std::vector<std::string> {
     }
 
     result.push_back(std::string(str.data() + start, str.length() - start));
-
     return result;
 }
 
@@ -85,4 +84,21 @@ auto getInputFromFile(const std::string& filePath) -> std::vector<std::string> {
     result.push_back(std::string_view(str.data() + start, str.length() - start));
 
     return result;
+}
+
+[[nodiscard]] auto getNumbersFromString(const std::string& str) -> std::vector<std::uint32_t> {
+    const auto splitNumbers = splitString(str, " ");
+    std::vector<std::uint32_t> numbers;
+    std::ranges::for_each(splitNumbers, [&numbers] (const std::string& str) {
+                try {
+                    numbers.push_back(std::stoul(str));
+                } catch (const std::invalid_argument& ex) {
+                    std::cerr << ex.what() << " - " << str << '\n';
+                    std::abort();
+                } catch (const std::out_of_range& ex) {
+                    std::cerr << ex.what() << " - " << str << '\n';
+                    std::abort();
+                }
+            });
+    return numbers;
 }

@@ -3,6 +3,7 @@
 #include "day2.h"
 #include "day3.h"
 #include "day4.h"
+#include "day5.h"
 #include "helperFunctions.h"
 
 #include "catch2/catch_all.hpp"  // IWYU pragma: keep
@@ -39,5 +40,13 @@ TEST_CASE("Day4_part1", "part1") {
 
 TEST_CASE("Day4_part2", "part2") {
     REQUIRE(Day4::part2() == "30");
+}
+
+TEST_CASE("Day5_part1", "part1") {
+    REQUIRE(Day5::part1() == "35");
+}
+
+TEST_CASE("Day5_part2", "part2") {
+    REQUIRE(Day5::part2() == "");
 }
 
