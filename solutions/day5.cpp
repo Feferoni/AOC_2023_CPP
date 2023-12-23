@@ -1,9 +1,7 @@
 #include <cassert>
 #include <map>
 #include <optional>
-#include <ranges>
 #include <regex>
-#include <set>
 #include <span>
 
 #include "day5.h"
@@ -39,21 +37,9 @@ auto operator<<(std::ostream& os, const FarmingType ft) -> std::ostream& {
     return os;
 }
 
-struct ConversionRange {
-    uint32_t fromMin;
-    uint32_t fromMax;
-    uint32_t toMin;
-    uint32_t toMax;
-
-    friend auto operator<<(std::ostream& os, const ConversionRange& cr) -> std::ostream& {
-        os << "From: " << cr.fromMin << "->" << cr.fromMax;
-        os << " to: " << cr.toMin << "->" << cr.toMax;
-        return os;
-    }
-};
-
-using ConversionType     = std::pair<FarmingType, FarmingType>;
-using ConversionMultiMap = std::multimap<ConversionType, ConversionRange>;
+using ConversionType   = std::pair<FarmingType, FarmingType>;
+using ConversionRanges = std::vector<ConversionRange>;
+using ConversionMap    = std::map<ConversionType, ConversionRanges>;
 
 namespace {
 constexpr char seedsPattern[]      = "seeds: (.*)";
@@ -97,8 +83,8 @@ constexpr char conversionPattern[] = "(\\w+)-to-(\\w+) map:";
     return std::make_pair(fromType, toType);
 }
 
-[[nodiscard]] auto parseConversionData(const auto& input) -> ConversionMultiMap {
-    ConversionMultiMap farmingTypeConversion;
+[[nodiscard]] auto parseConversionData(const auto& input) -> ConversionMap {
+    ConversionMap conversionMap;
 
     std::pair<FarmingType, FarmingType> currentConversion;
     for (const auto& line : input) {
@@ -118,38 +104,51 @@ constexpr char conversionPattern[] = "(\\w+)-to-(\\w+) map:";
         const auto      minSrc  = numbers.at(1);
         const auto      range   = numbers.at(2);
         ConversionRange conversionRange;
-        conversionRange.toMin   = minDest;
-        conversionRange.toMax   = minDest + range - 1;
-        conversionRange.fromMin = minSrc;
-        conversionRange.fromMax = minSrc + range - 1;
-        farmingTypeConversion.insert(std::make_pair(currentConversion, conversionRange));
-    }
+        conversionRange.to   = {minDest, minDest + range - 1};
+        conversionRange.from = {minSrc, minSrc + range - 1};
 
-    return farmingTypeConversion;
-}
-
-[[nodiscard]] auto convertFarmingTypeNumber(const uint32_t currentValue, const ConversionMultiMap& conversionMultiMap, const ConversionType& conversionType) -> uint32_t {
-    auto multiMapRange = conversionMultiMap.equal_range(conversionType);
-    for (auto it = multiMapRange.first; it != multiMapRange.second; ++it) {
-        if (it->second.fromMin <= currentValue && currentValue <= it->second.fromMax) {
-            const auto diff = currentValue - it->second.fromMin;
-            return it->second.toMin + diff;
+        auto it = conversionMap.find(currentConversion);
+        if (it == conversionMap.end()) {
+            conversionMap[currentConversion] = {conversionRange};
+        } else {
+            it->second.push_back(conversionRange);
         }
     }
 
+    for (auto& [conversionType, conversionRanges] : conversionMap) {
+        std::sort(conversionRanges.begin(), conversionRanges.end());
+    }
+
+    return conversionMap;
+}
+
+[[nodiscard]] auto convertFarmingTypeNumber(const uint32_t currentValue, const ConversionMap& conversionMap, const ConversionType& conversionType) -> uint32_t {
+    const auto& it = conversionMap.find(conversionType);
+    std::cout << '\n';
+    if (it != conversionMap.end()) {
+        std::cout << "Value: " << currentValue << " - " << it->first.first << "->" << it->first.second << ": " << it->second << '\n';
+        for (const auto& conversionRanges : it->second) {
+            const auto convertedValue = conversionRanges.convertValue(currentValue);
+            if (convertedValue.has_value()) {
+                std::cout << it->first.first << "->" << it->first.second << " converted value: " << convertedValue.value() << '\n';
+                return convertedValue.value();
+            }
+        }
+    }
+    std::cout << it->first.first << "->" << it->first.second << " same value: " << currentValue << "\n";
     return currentValue;
 }
 
-[[nodiscard]] auto getLowestLocationNumber(const std::vector<std::uint32_t>& seedNumbers, const ConversionMultiMap& farmingTypeConversionData) -> std::string {
+[[nodiscard]] auto getLowestLocationNumber(const std::vector<std::uint32_t>& seedNumbers, const ConversionMap& conversionMap) -> std::string {
     std::optional<uint32_t> minLocation = std::nullopt;
     std::ranges::for_each(seedNumbers, [&](const uint32_t seedNumber) {
-        const auto soilNumber = convertFarmingTypeNumber(seedNumber, farmingTypeConversionData, {FarmingType::SEED, FarmingType::SOIL});
-        const auto fertNumber = convertFarmingTypeNumber(soilNumber, farmingTypeConversionData, {FarmingType::SOIL, FarmingType::FERTILIZER});
-        const auto waterNumber = convertFarmingTypeNumber(fertNumber, farmingTypeConversionData, {FarmingType::FERTILIZER, FarmingType::WATER});
-        const auto tempNumber = convertFarmingTypeNumber(waterNumber, farmingTypeConversionData, {FarmingType::WATER, FarmingType::LIGHT});
-        const auto lightNumber = convertFarmingTypeNumber(tempNumber, farmingTypeConversionData, {FarmingType::LIGHT, FarmingType::TEMPERATURE});
-        const auto humiNumber = convertFarmingTypeNumber(lightNumber, farmingTypeConversionData, {FarmingType::TEMPERATURE, FarmingType::HUMIDITY});
-        const auto locNumber = convertFarmingTypeNumber(humiNumber, farmingTypeConversionData, {FarmingType::HUMIDITY, FarmingType::LOCATION});
+        const auto soilNumber = convertFarmingTypeNumber(seedNumber, conversionMap, {FarmingType::SEED, FarmingType::SOIL});
+        const auto fertNumber = convertFarmingTypeNumber(soilNumber, conversionMap, {FarmingType::SOIL, FarmingType::FERTILIZER});
+        const auto waterNumber = convertFarmingTypeNumber(fertNumber, conversionMap, {FarmingType::FERTILIZER, FarmingType::WATER});
+        const auto tempNumber = convertFarmingTypeNumber(waterNumber, conversionMap, {FarmingType::WATER, FarmingType::LIGHT});
+        const auto lightNumber = convertFarmingTypeNumber(tempNumber, conversionMap, {FarmingType::LIGHT, FarmingType::TEMPERATURE});
+        const auto humiNumber = convertFarmingTypeNumber(lightNumber, conversionMap, {FarmingType::TEMPERATURE, FarmingType::HUMIDITY});
+        const auto locNumber = convertFarmingTypeNumber(humiNumber, conversionMap, {FarmingType::HUMIDITY, FarmingType::LOCATION});
 
         if (minLocation.has_value() && minLocation > locNumber) {
             minLocation = locNumber;
@@ -161,20 +160,24 @@ constexpr char conversionPattern[] = "(\\w+)-to-(\\w+) map:";
     return std::to_string(minLocation.value_or(0));
 }
 
-[[nodiscard]] auto getModifiedSeedList(const std::vector<uint32_t>& seedNumbers) -> std::vector<uint32_t> {
+[[nodiscard]] auto getSeedRanges(const std::vector<uint32_t>& seedNumbers) -> std::vector<Range> {
     assert(seedNumbers.size() % 2 == 0);
 
-    std::vector<uint32_t> newSeedNumbers;
+    std::vector<Range> seedRanges;
+
     for (uint32_t i = 0; i < seedNumbers.size(); i += 2) {
         const auto& startNumber = seedNumbers.at(i);
-        const auto& range       = seedNumbers.at(i + 1) - 1;
-
-        for (auto j : std::views::iota(startNumber, startNumber + range - 1)) {
-            newSeedNumbers.push_back(j);
-        }
+        const auto& range       = seedNumbers.at(i + 1);
+        seedRanges.push_back({startNumber, startNumber + range - 1});
     }
 
-    return newSeedNumbers;
+    std::sort(seedRanges.begin(), seedRanges.end());
+
+    for (uint32_t i = 0; i < seedRanges.size(); i++) {
+
+    }
+
+    return seedRanges;
 }
 
 }  // namespace
@@ -193,6 +196,9 @@ auto Day5::part2() -> std::string {
     const auto seedNumbers    = parseSeedNumbers(input.at(0));
     const auto conversionData = parseConversionData(
         std::span(input.begin() + 2, input.end()));
-    const auto modifiedSeedNumbers = getModifiedSeedList(seedNumbers);
-    return getLowestLocationNumber(modifiedSeedNumbers, conversionData);
+    const auto seedRange = getSeedRanges(seedNumbers);
+
+    std::cout << seedRange << '\n';
+
+    return "";
 };

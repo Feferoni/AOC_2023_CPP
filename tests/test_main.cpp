@@ -10,6 +10,53 @@
 
 bool IsTest::isTest = true;
 
+TEST_CASE("Range_hasOverlap", "hasOverlap") {
+    Range r1{1, 10};
+    Range r2{11, 12};
+    REQUIRE(r1.hasOverlap(r2) == false);
+    REQUIRE(r2.hasOverlap(r1) == false);
+
+    r1 = {1, 10};
+    r2 = {10, 12};
+    REQUIRE(r1.hasOverlap(r2) == true);
+    REQUIRE(r2.hasOverlap(r1) == true);
+
+    r1 = {5, 10};
+    r2 = {1, 6};
+    REQUIRE(r1.hasOverlap(r2) == true);
+    REQUIRE(r2.hasOverlap(r1) == true);
+
+    r1 = {1, 10};
+    r2 = {2, 6};
+    REQUIRE(r1.hasOverlap(r2) == true);
+    REQUIRE(r2.hasOverlap(r1) == true);
+}
+
+TEST_CASE("Range_merge", "Merge") {
+    Range r1{1, 10};
+    Range r2{11, 20};
+    REQUIRE(r1.mergeRanges(r2) == std::nullopt);
+    REQUIRE(r2.mergeRanges(r1) == std::nullopt);
+
+    r1 = {1, 10};
+    r2 = {10, 20};
+    REQUIRE(r1.mergeRanges(r2).value() == Range{1, 20});
+    REQUIRE(r2.mergeRanges(r1).value() == Range{1, 20});
+
+    r1 = {1, 10};
+    r2 = {5, 6};
+    REQUIRE(r1.mergeRanges(r2).value() == Range{1, 10});
+    REQUIRE(r2.mergeRanges(r1).value() == Range{1, 10});
+}
+
+TEST_CASE("ConversionRange", "ConversionRange") {
+    Range from{56, 92};
+    Range to{60, 96};
+    ConversionRange cr{from, to};
+
+    REQUIRE(cr.convertValue(78) == 82);
+}
+
 TEST_CASE("Day1_part1", "part1") {
     REQUIRE(Day1::part1() == "142");
 }
