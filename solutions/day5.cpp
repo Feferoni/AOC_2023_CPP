@@ -1,7 +1,9 @@
+#include <cassert>
 #include <map>
 #include <optional>
 #include <ranges>
 #include <regex>
+#include <set>
 #include <span>
 
 #include "day5.h"
@@ -95,7 +97,7 @@ constexpr char conversionPattern[] = "(\\w+)-to-(\\w+) map:";
     return std::make_pair(fromType, toType);
 }
 
-[[nodiscard]] auto parseFarmingTypeConversionData(const auto& input) -> ConversionMultiMap {
+[[nodiscard]] auto parseConversionData(const auto& input) -> ConversionMultiMap {
     ConversionMultiMap farmingTypeConversion;
 
     std::pair<FarmingType, FarmingType> currentConversion;
@@ -137,14 +139,8 @@ constexpr char conversionPattern[] = "(\\w+)-to-(\\w+) map:";
 
     return currentValue;
 }
-}  // namespace
 
-auto Day5::part1() -> std::string {
-    const auto input       = getInput<Day5>(std::source_location::current());
-    const auto seedNumbers = parseSeedNumbers(input.at(0));
-    const auto farmingTypeConversionData = parseFarmingTypeConversionData(
-        std::span(input.begin() + 2, input.end()));
-
+[[nodiscard]] auto getLowestLocationNumber(const std::vector<std::uint32_t>& seedNumbers, const ConversionMultiMap& farmingTypeConversionData) -> std::string {
     std::optional<uint32_t> minLocation = std::nullopt;
     std::ranges::for_each(seedNumbers, [&](const uint32_t seedNumber) {
         const auto soilNumber = convertFarmingTypeNumber(seedNumber, farmingTypeConversionData, {FarmingType::SEED, FarmingType::SOIL});
@@ -163,9 +159,40 @@ auto Day5::part1() -> std::string {
     });
 
     return std::to_string(minLocation.value_or(0));
+}
+
+[[nodiscard]] auto getModifiedSeedList(const std::vector<uint32_t>& seedNumbers) -> std::vector<uint32_t> {
+    assert(seedNumbers.size() % 2 == 0);
+
+    std::vector<uint32_t> newSeedNumbers;
+    for (uint32_t i = 0; i < seedNumbers.size(); i += 2) {
+        const auto& startNumber = seedNumbers.at(i);
+        const auto& range       = seedNumbers.at(i + 1) - 1;
+
+        for (auto j : std::views::iota(startNumber, startNumber + range - 1)) {
+            newSeedNumbers.push_back(j);
+        }
+    }
+
+    return newSeedNumbers;
+}
+
+}  // namespace
+
+auto Day5::part1() -> std::string {
+    const auto input          = getInput<Day5>(std::source_location::current());
+    const auto seedNumbers    = parseSeedNumbers(input.at(0));
+    const auto conversionData = parseConversionData(
+        std::span(input.begin() + 2, input.end()));
+
+    return getLowestLocationNumber(seedNumbers, conversionData);
 };
 
 auto Day5::part2() -> std::string {
-    const auto input = getInput<Day5>(std::source_location::current());
-    return "";
+    const auto input          = getInput<Day5>(std::source_location::current());
+    const auto seedNumbers    = parseSeedNumbers(input.at(0));
+    const auto conversionData = parseConversionData(
+        std::span(input.begin() + 2, input.end()));
+    const auto modifiedSeedNumbers = getModifiedSeedList(seedNumbers);
+    return getLowestLocationNumber(modifiedSeedNumbers, conversionData);
 };

@@ -47,6 +47,6 @@ TEST_CASE("Day5_part1", "part1") {
 }
 
 TEST_CASE("Day5_part2", "part2") {
-    REQUIRE(Day5::part2() == "");
+    REQUIRE(Day5::part2() == "46");
 }
 
