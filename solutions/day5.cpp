@@ -77,7 +77,7 @@ constexpr char conversionPattern[] = "(\\w+)-to-(\\w+) map:";
     }
 
     const std::string numbersString = match[1];
-    return helper::string::getNumbersFromString(numbersString);
+    return helper::string::getNumbersFromString<uint32_t>(numbersString);
 }
 
 [[nodiscard]] auto parseFarmingTypes(const std::string& line) -> std::optional<std::pair<FarmingType, FarmingType>> {
@@ -107,7 +107,7 @@ constexpr char conversionPattern[] = "(\\w+)-to-(\\w+) map:";
             continue;
         }
 
-        const auto numbers = helper::string::getNumbersFromString(line);
+        const auto numbers = helper::string::getNumbersFromString<uint32_t>(line);
 
         const auto      minDest = numbers.at(0);
         const auto      minSrc  = numbers.at(1);

@@ -235,5 +235,5 @@ TEST_CASE("Day6_part1", "part1") {
 }
 
 TEST_CASE("Day6_part2", "part2") {
-    REQUIRE(Day6::part2() == "");
+    REQUIRE(Day6::part2() == "71503");
 }

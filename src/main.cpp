@@ -70,6 +70,7 @@ auto main() -> int {
     printSolutionFor<Day3>();
     printSolutionFor<Day4>();
     printSolutionFor<Day5>();
+    printSolutionFor<Day6>();
 
     return 0;
 }
