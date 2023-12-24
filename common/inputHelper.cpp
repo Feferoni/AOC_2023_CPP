@@ -5,7 +5,7 @@
 
 #include <cxxabi.h>
 
-#include "fileHelper.h"
+#include "inputHelper.h"
 
 namespace {
 constexpr char
@@ -23,7 +23,7 @@ auto extractDayFromfunctionName(const std::string& functionSignature) -> std::st
     std::abort();
 }
 }  // namespace
-
+namespace helper::input {
 auto getFilePath(const std::source_location& location, const std::string& day) -> std::string {
     [[maybe_unused]] const auto part = extractDayFromfunctionName(location.function_name());
     const auto currentPath = std::string(std::filesystem::current_path());
@@ -51,3 +51,5 @@ auto getInputFromFile(const std::string& filePath) -> std::vector<std::string> {
 
     return lines;
 }
+
+}  // namespace helper::input

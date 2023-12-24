@@ -3,7 +3,7 @@
 
 #include "day1.h"
 
-#include "fileHelper.h"
+#include "inputHelper.h"
 
 namespace {
 constexpr std::array<std::pair<std::string_view, std::string_view>, 15> conversionTable = {std::pair{"eightwo", "82"},   std::pair{"eighthree", "83"},
@@ -43,12 +43,12 @@ constexpr std::array<std::pair<std::string_view, std::string_view>, 15> conversi
 }  // namespace
 
 auto Day1::part1() -> std::string {
-    const auto input = getInput<Day1>(std::source_location::current());
+    const auto input = helper::input::getInput<Day1>(std::source_location::current());
     return getSumOfNumbers(input);
 };
 
 auto Day1::part2() -> std::string {
-    const auto input = getInput<Day1>(std::source_location::current());
+    const auto input = helper::input::getInput<Day1>(std::source_location::current());
     const auto convertedInput = input | std::views::transform(replaceAlpahNumbers);
     return getSumOfNumbers(convertedInput);
 };

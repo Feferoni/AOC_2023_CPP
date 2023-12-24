@@ -8,6 +8,7 @@
 
 #include "helperTemplates.h"
 
+namespace helper::input {
 auto getFilePath(const std::source_location& location, const std::string& day) -> std::string;
 
 auto getInputFromFile(const std::string& filePath) -> std::vector<std::string>;
@@ -17,3 +18,4 @@ auto getInput(const std::source_location location) -> std::vector<std::string> {
     const auto filePath = getFilePath(location, demangle<Day>());
     return getInputFromFile(filePath);
 }
+}  // namespace helper::file

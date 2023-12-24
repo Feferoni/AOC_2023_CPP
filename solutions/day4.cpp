@@ -6,7 +6,7 @@
 
 #include "day4.h"
 
-#include "fileHelper.h"
+#include "inputHelper.h"
 #include "stringHelper.h"
 
 namespace {
@@ -95,7 +95,7 @@ struct CardData {
 }  // namespace
 
 auto Day4::part1() -> std::string {
-    const auto input       = getInput<Day4>(std::source_location::current());
+    const auto input       = helper::input::getInput<Day4>(std::source_location::current());
     const auto cards       = parseInputToCards(input);
     uint32_t   totaltScore = 0;
     std::ranges::for_each(cards, [&totaltScore](const CardData& cardData) {
@@ -105,7 +105,7 @@ auto Day4::part1() -> std::string {
 };
 
 auto Day4::part2() -> std::string {
-    const auto input = getInput<Day4>(std::source_location::current());
+    const auto input = helper::input::getInput<Day4>(std::source_location::current());
     const auto cards = parseInputToCards(input);
     std::vector<uint32_t> cardCount(cards.size(), 1);
 

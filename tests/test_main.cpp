@@ -4,7 +4,8 @@
 #include "day3.h"
 #include "day4.h"
 #include "day5.h"
-#include "fileHelper.h"
+#include "day6.h"
+#include "inputHelper.h"
 #include "intervalHelper.h"
 
 #include "catch2/catch_all.hpp"  // IWYU pragma: keep
@@ -227,4 +228,12 @@ TEST_CASE("Day5_part1", "part1") {
 
 TEST_CASE("Day5_part2", "part2") {
     REQUIRE(Day5::part2() == "46");
+}
+
+TEST_CASE("Day6_part1", "part1") {
+    REQUIRE(Day6::part1() == "288");
+}
+
+TEST_CASE("Day6_part2", "part2") {
+    REQUIRE(Day6::part2() == "");
 }

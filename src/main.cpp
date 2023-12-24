@@ -10,7 +10,8 @@
 #include "day3.h"
 #include "day4.h"
 #include "day5.h"
-#include "fileHelper.h"
+#include "day6.h"
+#include "inputHelper.h"
 
 namespace {
 template <class Day>

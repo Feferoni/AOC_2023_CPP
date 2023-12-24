@@ -3,7 +3,7 @@
 
 #include "day3.h"
 
-#include "fileHelper.h"
+#include "inputHelper.h"
 #include "positionHelper.h"
 
 namespace {
@@ -222,11 +222,11 @@ constexpr char INVALID_SYMBOL = '.';
 }  // namespace
 
 auto Day3::part1() -> std::string {
-    const auto input = getInput<Day3>(std::source_location::current());
+    const auto input = helper::input::getInput<Day3>(std::source_location::current());
     return sumOfPartNumbers(input);
 };
 
 auto Day3::part2() -> std::string {
-    const auto input = getInput<Day3>(std::source_location::current());
+    const auto input = helper::input::getInput<Day3>(std::source_location::current());
     return sumOfGearRatios(input);
 };
