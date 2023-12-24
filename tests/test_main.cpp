@@ -5,6 +5,7 @@
 #include "day4.h"
 #include "day5.h"
 #include "day6.h"
+#include "day7.h"
 #include "inputHelper.h"
 #include "intervalHelper.h"
 
@@ -235,5 +236,13 @@ TEST_CASE("Day6_part1", "part1") {
 }
 
 TEST_CASE("Day6_part2", "part2") {
-    REQUIRE(Day6::part2() == "71503");
+    REQUIRE(Day6::part2() == "7150");
+}
+
+TEST_CASE("Day7_part1", "part1") {
+    REQUIRE(Day7::part1() == "6440");
+}
+
+TEST_CASE("Day7_part2", "part2") {
+    REQUIRE(Day7::part2() == "");
 }
