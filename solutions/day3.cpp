@@ -3,9 +3,11 @@
 
 #include "day3.h"
 
-#include "helperFunctions.h"
+#include "fileHelper.h"
+#include "positionHelper.h"
 
 namespace {
+using namespace helper::position;
 // clang-format off
 constexpr std::array<Position2D, 8> DIRECTIONS = {
     Position2D{ 1,  0},  // right
@@ -28,7 +30,7 @@ constexpr std::array<std::pair<uint32_t, uint32_t>, 3> VALID_SYMBOL_RANGES = {
 struct NumberData {
     Position2D startPosition;
     Position2D endPosition;
-    uint32_t number;
+    uint32_t   number;
 
     [[maybe_unused]] friend std::ostream& operator<<(std::ostream& os, const NumberData& nd) {
         os << "NumberData startPos: " << nd.startPosition << " endPos: " << nd.endPosition << " Number: " << nd.number;
@@ -122,7 +124,7 @@ constexpr char INVALID_SYMBOL = '.';
 }
 
 [[nodiscard]] auto getPositionsOfGears(const std::vector<std::string>& input) -> std::vector<Position2D> {
-    const Position2D positionLimit = getUpperLimitsPosition(input);
+    const Position2D        positionLimit = getUpperLimitsPosition(input);
     std::vector<Position2D> gearPositions;
 
     for (int32_t y = 0; y <= positionLimit.y; y++) {
@@ -139,7 +141,7 @@ constexpr char INVALID_SYMBOL = '.';
 }
 
 [[nodiscard]] auto getNumberDatas(const std::vector<std::string>& input) -> std::vector<NumberData> {
-    const Position2D positionLimit = getUpperLimitsPosition(input);
+    const Position2D        positionLimit = getUpperLimitsPosition(input);
     std::vector<NumberData> numberDatas;
 
     std::optional<NumberData> currentNumberData = std::nullopt;

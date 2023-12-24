@@ -4,15 +4,14 @@
 #include "day3.h"
 #include "day4.h"
 #include "day5.h"
-#include "helperFunctions.h"
+#include "intervalHelper.h"
+#include "fileHelper.h"
 
 #include "catch2/catch_all.hpp"  // IWYU pragma: keep
 
-bool IsTest::isTest = true;
-
 TEST_CASE("Range_hasOverlap", "hasOverlap") {
-    Interval::Range r1{1, 10};
-    Interval::Range r2{11, 12};
+    helper::interval::Range r1{1, 10};
+    helper::interval::Range r2{11, 12};
     REQUIRE(r1.hasOverlap(r2) == false);
     REQUIRE(r2.hasOverlap(r1) == false);
 
@@ -33,8 +32,8 @@ TEST_CASE("Range_hasOverlap", "hasOverlap") {
 }
 
 TEST_CASE("IsAdjecent", "IsAdjecent") {
-    Interval::Range r1{1, 10};
-    Interval::Range r2{11, 12};
+    helper::interval::Range r1{1, 10};
+    helper::interval::Range r2{11, 12};
     REQUIRE(r1.isAdjecentTo(r2) == true);
     REQUIRE(r2.isAdjecentTo(r1) == true);
 
@@ -45,8 +44,8 @@ TEST_CASE("IsAdjecent", "IsAdjecent") {
 }
 
 TEST_CASE("intersectLeftRight", "LeftRight") {
-    Interval::Range r1{5, 20};
-    Interval::Range r2{18, 22};
+    helper::interval::Range r1{5, 20};
+    helper::interval::Range r2{18, 22};
     REQUIRE(r1.rightIntersctionWith(r2) == true);
     REQUIRE(r2.rightIntersctionWith(r1) == false);
     REQUIRE(r1.leftIntersctionWith(r2) == false);
@@ -75,8 +74,8 @@ TEST_CASE("intersectLeftRight", "LeftRight") {
 }
 
 TEST_CASE("IsSubOrSuper", "SubOrSuper") {
-    Interval::Range r1{1, 20};
-    Interval::Range r2{1, 12};
+    helper::interval::Range r1{1, 20};
+    helper::interval::Range r2{1, 12};
     REQUIRE(r1.isSuperSetTo(r2) == true);
     REQUIRE(r2.isSuperSetTo(r1) == false);
     REQUIRE(r1.isSubSetOf(r2) == false);
@@ -106,60 +105,60 @@ TEST_CASE("IsSubOrSuper", "SubOrSuper") {
 
 
 TEST_CASE("Range_merge", "Merge") {
-    Interval::Range r1{1, 10};
-    Interval::Range r2{12, 20};
+    helper::interval::Range r1{1, 10};
+    helper::interval::Range r2{12, 20};
     REQUIRE(r1.mergeRanges(r2) == std::nullopt);
     REQUIRE(r2.mergeRanges(r1) == std::nullopt);
 
     r1 = {1, 10};
     r2 = {11, 20};
-    REQUIRE(r1.mergeRanges(r2) == Interval::Range{1,20});
-    REQUIRE(r2.mergeRanges(r1) == Interval::Range{1,20});
+    REQUIRE(r1.mergeRanges(r2) == helper::interval::Range{1,20});
+    REQUIRE(r2.mergeRanges(r1) == helper::interval::Range{1,20});
 
     r1 = {1, 10};
     r2 = {10, 20};
-    REQUIRE(r1.mergeRanges(r2).value() == Interval::Range{1, 20});
-    REQUIRE(r2.mergeRanges(r1).value() == Interval::Range{1, 20});
+    REQUIRE(r1.mergeRanges(r2).value() == helper::interval::Range{1, 20});
+    REQUIRE(r2.mergeRanges(r1).value() == helper::interval::Range{1, 20});
 
     r1 = {1, 10};
     r2 = {5, 6};
-    REQUIRE(r1.mergeRanges(r2).value() == Interval::Range{1, 10});
-    REQUIRE(r2.mergeRanges(r1).value() == Interval::Range{1, 10});
+    REQUIRE(r1.mergeRanges(r2).value() == helper::interval::Range{1, 10});
+    REQUIRE(r2.mergeRanges(r1).value() == helper::interval::Range{1, 10});
 }
 
 TEST_CASE("ConversionRangeGetConvertedValue", "ConversionRange") {
-    Interval::Range from{56, 92};
-    Interval::Range to{60, 96};
-    Interval::ConversionRange cr{from, to};
+    helper::interval::Range from{56, 92};
+    helper::interval::Range to{60, 96};
+    helper::interval::ConversionRange cr{from, to};
 
     REQUIRE(cr.getConvertValue(78) == 82);
 }
 
 TEST_CASE("ConversionRangeGetConvertedRange", "ConversionRange") {
-    Interval::Range from{10, 20};
-    Interval::Range to{30, 40};
-    Interval::ConversionRange cr{from, to};
+    helper::interval::Range from{10, 20};
+    helper::interval::Range to{30, 40};
+    helper::interval::ConversionRange cr{from, to};
 
-    Interval::Range toBeConverted{18, 100};
+    helper::interval::Range toBeConverted{18, 100};
 
     auto convertedRange = cr.getConvertedRange(toBeConverted);
     REQUIRE(convertedRange.has_value() == true);
-    REQUIRE(convertedRange.value() == Interval::Range{38, 40});
+    REQUIRE(convertedRange.value() == helper::interval::Range{38, 40});
 
     toBeConverted = {0, 12};
     convertedRange = cr.getConvertedRange(toBeConverted);
     REQUIRE(convertedRange.has_value() == true);
-    REQUIRE(convertedRange.value() == Interval::Range{30, 32});
+    REQUIRE(convertedRange.value() == helper::interval::Range{30, 32});
 
     toBeConverted = {10, 20};
     convertedRange = cr.getConvertedRange(toBeConverted);
     REQUIRE(convertedRange.has_value() == true);
-    REQUIRE(convertedRange.value() == Interval::Range{30, 40});
+    REQUIRE(convertedRange.value() == helper::interval::Range{30, 40});
 
     toBeConverted = {0, 100};
     convertedRange = cr.getConvertedRange(toBeConverted);
     REQUIRE(convertedRange.has_value() == true);
-    REQUIRE(convertedRange.value() == Interval::Range{30, 40});
+    REQUIRE(convertedRange.value() == helper::interval::Range{30, 40});
 
     toBeConverted = {50, 100};
     convertedRange = cr.getConvertedRange(toBeConverted);
@@ -171,23 +170,23 @@ TEST_CASE("ConversionRangeGetConvertedRange", "ConversionRange") {
 }
 
 TEST_CASE("MergeAdjecentRanges", "Merging") {
-    Interval::Range r0{1, 3};
-    Interval::Range r1{5, 10};
-    Interval::Range r2{10, 15};
-    Interval::Range r3{10, 25};
-    Interval::Range r4{30, 35};
-    Interval::Range r5{36, 40};
+    helper::interval::Range r0{1, 3};
+    helper::interval::Range r1{5, 10};
+    helper::interval::Range r2{10, 15};
+    helper::interval::Range r3{10, 25};
+    helper::interval::Range r4{30, 35};
+    helper::interval::Range r5{36, 40};
 
-    std::vector<Interval::Range> rangesBeforeMerge = {r4, r3, r2, r1, r0, r5};
-    const auto rangesAfterMerge = Interval::mergeAdjecentRanges(rangesBeforeMerge);
+    std::vector<helper::interval::Range> rangesBeforeMerge = {r4, r3, r2, r1, r0, r5};
+    const auto rangesAfterMerge = helper::interval::mergeAdjecentRanges(rangesBeforeMerge);
 
     std::cout << "Before: " << rangesBeforeMerge << '\n';
     std::cout << "After: " << rangesAfterMerge << '\n';
 
     REQUIRE(rangesAfterMerge.size() == 3);
-    REQUIRE(rangesAfterMerge.at(0) == Interval::Range{1,3});
-    REQUIRE(rangesAfterMerge.at(1) == Interval::Range{5,25});
-    REQUIRE(rangesAfterMerge.at(2) == Interval::Range{30,40});
+    REQUIRE(rangesAfterMerge.at(0) == helper::interval::Range{1,3});
+    REQUIRE(rangesAfterMerge.at(1) == helper::interval::Range{5,25});
+    REQUIRE(rangesAfterMerge.at(2) == helper::interval::Range{30,40});
 }
 
 TEST_CASE("Day1_part1", "part1") {

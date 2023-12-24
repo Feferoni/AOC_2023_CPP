@@ -6,7 +6,8 @@
 
 #include "day4.h"
 
-#include "helperFunctions.h"
+#include "stringHelper.h"
+#include "fileHelper.h"
 
 namespace {
 
@@ -63,14 +64,14 @@ struct CardData {
     cardData.cardNumber = std::stoul(cardMatch[1]);
 
     const auto& allNumbersStr = cardMatch[2];
-    const auto  splitNumbers  = splitString(allNumbersStr, "|");
+    const auto  splitNumbers  = helper::string::splitString(allNumbersStr, "|");
     if (splitNumbers.size() != 2) {
         std::cerr << "Split numbers is wrong: " << splitNumbers << '\n';
         std::abort();
     }
 
-    const auto winningNumberStrings = splitString(splitNumbers[0], " ");
-    const auto yourNumbersStrings   = splitString(splitNumbers[1], " ");
+    const auto winningNumberStrings = helper::string::splitString(splitNumbers[0], " ");
+    const auto yourNumbersStrings   = helper::string::splitString(splitNumbers[1], " ");
     const auto winningNumbers = parseStringOfNumbers(winningNumberStrings);
     const auto yourNumbers = parseStringOfNumbers(yourNumbersStrings);
     cardData.totalWinningNumbers = getWinningNumbersCount(winningNumbers, yourNumbers);

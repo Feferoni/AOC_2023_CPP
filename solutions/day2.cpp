@@ -6,7 +6,8 @@
 
 #include "day2.h"
 
-#include "helperFunctions.h"
+#include "stringHelper.h"
+#include "fileHelper.h"
 
 namespace {
 constexpr char saveGrabbedCubesPattern[] = "Game (\\d+): (.*)";
@@ -82,7 +83,7 @@ enum class Color : int {
 }
 
 [[nodiscard]] auto convertToGrabbedCubes(const std::string_view str) -> ColoredCubes {
-    const auto   colorsInfo = splitStrToStrViews(str, ",");
+    const auto   colorsInfo = helper::string::splitStrToStrViews(str, ",");
     ColoredCubes cubes{};
 
     for (const auto& colorInfo : colorsInfo) {
@@ -102,7 +103,7 @@ enum class Color : int {
 
 [[nodiscard]] auto parseLineIntoGameInfo(const std::string& line) -> Game {
     const auto [gameNr, gameInfo] = splitGameAndGrabs(line);
-    const auto eachGrab           = splitStrToStrViews(gameInfo, ";");
+    const auto eachGrab           = helper::string::splitStrToStrViews(gameInfo, ";");
 
     Game currentGame{{}, gameNr};
     std::transform(

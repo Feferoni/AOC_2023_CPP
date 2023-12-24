@@ -1,126 +1,6 @@
-#include <filesystem>
-#include <fstream>
-#include <iostream>
-#include <regex>
+#include <intervalHelper.h>
 
-#include <cxxabi.h>
-
-#include "helperFunctions.h"
-
-namespace {
-constexpr char
-    functionNamePatternString[] = "static std::string Day\\d+::(.*)\\(\\)";
-
-// could fetch the class name and function here, but to lazy to fix
-auto extractDayFromfunctionName(const std::string& functionSignature) -> std::string {
-    std::smatch matches;
-    if (std::regex_search(functionSignature, matches, std::regex(functionNamePatternString)) &&
-        !matches.empty()) {
-        return matches[1];
-    }
-
-    std::cerr << "Could not extract a day from the function: " << functionSignature << " with regex: " << functionNamePatternString << '\n';
-    std::abort();
-}
-}  // namespace
-
-auto getFilePath(const std::source_location& location, const std::string& day) -> std::string {
-    const auto part = extractDayFromfunctionName(location.function_name());
-    const auto currentPath = std::string(std::filesystem::current_path());
-
-    if (IsTest::isTest) {
-        return currentPath + "/../input/" + day + "_" + part + "_example.txt";
-    } else {
-        return currentPath + "/../input/" + day + ".txt";
-    }
-}
-
-auto getInputFromFile(const std::string& filePath) -> std::vector<std::string> {
-    std::vector<std::string> lines;
-    std::ifstream            file(filePath);
-    if (file.is_open()) {
-        std::string line;
-        while (std::getline(file, line)) {
-            lines.push_back(line);
-        }
-        file.close();
-    } else {
-        std::cerr << "Unable to open file: " << filePath << '\n';
-        std::abort();
-    }
-
-    return lines;
-}
-
-[[nodiscard]] auto splitString(const std::string& str, const std::string& delimiter) -> std::vector<std::string> {
-    std::vector<std::string> result;
-    size_t                   start = 0;
-    size_t                   end   = str.find(delimiter);
-
-    while (end != std::string::npos) {
-        auto token = std::string(str.data() + start, end - start);
-        result.push_back(token);
-        start = end + delimiter.length();
-        end   = str.find(delimiter, start);
-    }
-
-    result.push_back(std::string(str.data() + start, str.length() - start));
-    return result;
-}
-
-[[nodiscard]] auto splitStrToStrViews(const std::string_view& str, const std::string_view& delimiter) -> std::vector<std::string_view> {
-    std::vector<std::string_view> result;
-    size_t                        start = 0;
-    size_t                        end   = str.find(delimiter);
-
-    while (end != std::string::npos) {
-        std::string_view token = std::string_view(str.data() + start, end - start);
-        result.push_back(token);
-        start = end + delimiter.length();
-        end   = str.find(delimiter, start);
-    }
-
-    result.push_back(std::string_view(str.data() + start, str.length() - start));
-
-    return result;
-}
-
-[[nodiscard]] auto getNumbersFromString(const std::string& str) -> std::vector<std::uint32_t> {
-    const auto                 splitNumbers = splitString(str, " ");
-    std::vector<std::uint32_t> numbers;
-    std::ranges::for_each(splitNumbers, [&numbers](const std::string& str) {
-        try {
-            numbers.push_back(std::stoul(str));
-        } catch (const std::invalid_argument& ex) {
-            std::cerr << ex.what() << " - " << str << '\n';
-            std::abort();
-        } catch (const std::out_of_range& ex) {
-            std::cerr << ex.what() << " - " << str << '\n';
-            std::abort();
-        }
-    });
-    return numbers;
-}
-
-namespace Interval {
-auto operator<<(std::ostream& os, const FarmingType ft) -> std::ostream& {
-    switch (ft) {
-    case FarmingType::SEED: os << "SEED"; break;
-    case FarmingType::SOIL: os << "SOIL"; break;
-    case FarmingType::FERTILIZER: os << "FERTILIZER"; break;
-    case FarmingType::WATER: os << "WATER"; break;
-    case FarmingType::LIGHT: os << "LIGHT"; break;
-    case FarmingType::TEMPERATURE: os << "TEMPERATURE"; break;
-    case FarmingType::HUMIDITY: os << "HUMIDITY"; break;
-    case FarmingType::LOCATION: os << "LOCATION"; break;
-    default:
-        std::cerr << "Faulty farmingType: " << static_cast<uint32_t>(ft) << '\n';
-        std::abort();
-    }
-
-    return os;
-}
-
+namespace helper::interval {
 [[nodiscard]] auto Range::isAdjecentTo(const Range& other) const -> bool {
     return (max + 1 == other.min) || (min == other.max + 1);
 }
@@ -236,18 +116,18 @@ auto operator<<(std::ostream& os, const FarmingType ft) -> std::ostream& {
 }
 
 template <typename T>
-[[nodiscard]] auto getIndex(const std::vector<T>& vec, const uint32_t idx) -> std::optional<T> {
+[[nodiscard]] auto getOptionalIndex(const std::vector<T>& vec, const uint32_t idx) -> std::optional<T> {
     return (idx < vec.size()) ? std::make_optional(vec.at(idx)) : std::nullopt;
 }
 
-[[nodiscard]] auto getConvertedRanges(std::vector<Range> fromNumberRanges, const ConversionRanges& conversionRanges) -> std::vector<Range> {
+[[nodiscard]] auto getConvertedRanges(std::vector<Range> fromNumberRanges, const std::vector<ConversionRange>& conversionRanges) -> std::vector<Range> {
     std::vector<Range> convertedRanges;
     uint32_t           numberIdx     = 0;
     uint32_t           conversionIdx = 0;
 
     while (numberIdx < fromNumberRanges.size()) {
-        const auto fromNumberRange = getIndex(fromNumberRanges, numberIdx);
-        const auto conversionRange = getIndex(conversionRanges, conversionIdx);
+        const auto fromNumberRange = getOptionalIndex(fromNumberRanges, numberIdx);
+        const auto conversionRange = getOptionalIndex(conversionRanges, conversionIdx);
 
         if (fromNumberRange.has_value() && !conversionRange.has_value()) {
             // just plain conversion left
@@ -296,6 +176,9 @@ template <typename T>
             conversionIdx++;
         } else {
             std::cerr << "Should never arrive here. \n";
+            std::cerr << "Idx: " << numberIdx << " conversionIdx: " << conversionIdx <<'\n';
+            std::cerr << "FromNumberRange: " << fromNumberRange.value() <<'\n';
+            std::cerr << "ConversionRange: " << convertedRange.value() << '\n';
             std::abort();
         }
     }
@@ -304,3 +187,4 @@ template <typename T>
 }
 
 }  // namespace Interval
+

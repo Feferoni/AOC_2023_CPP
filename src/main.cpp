@@ -10,9 +10,7 @@
 #include "day3.h"
 #include "day4.h"
 #include "day5.h"
-#include "helperFunctions.h"
-
-bool IsTest::isTest = false;
+#include "fileHelper.h"
 
 namespace {
 template <class Day>
@@ -65,10 +63,10 @@ auto printSolutionFor() -> void {
 }  // namespace
 
 auto main() -> int {
-    /* printSolutionFor<Day1>(); */
-    /* printSolutionFor<Day2>(); */
-    /* printSolutionFor<Day3>(); */
-    /* printSolutionFor<Day4>(); */
+    printSolutionFor<Day1>();
+    printSolutionFor<Day2>();
+    printSolutionFor<Day3>();
+    printSolutionFor<Day4>();
     printSolutionFor<Day5>();
 
     return 0;

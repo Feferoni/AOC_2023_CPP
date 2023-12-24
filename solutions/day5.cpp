@@ -6,12 +6,50 @@
 
 #include "day5.h"
 
-#include "helperFunctions.h"
+#include "fileHelper.h"
+#include "intervalHelper.h"
+#include "stringHelper.h"
 
 namespace {
-using namespace Interval;
-constexpr char seedsPattern[]      = "seeds: (.*)";
-constexpr char conversionPattern[] = "(\\w+)-to-(\\w+) map:";
+using namespace helper::interval;
+
+enum class FarmingType : uint32_t {
+    SEED,
+    SOIL,
+    FERTILIZER,
+    WATER,
+    LIGHT,
+    TEMPERATURE,
+    HUMIDITY,
+    LOCATION
+};
+
+auto operator<<(std::ostream& os, const FarmingType ft) -> std::ostream& {
+    switch (ft) {
+    case FarmingType::SEED: os << "SEED"; break;
+    case FarmingType::SOIL: os << "SOIL"; break;
+    case FarmingType::FERTILIZER: os << "FERTILIZER"; break;
+    case FarmingType::WATER: os << "WATER"; break;
+    case FarmingType::LIGHT: os << "LIGHT"; break;
+    case FarmingType::TEMPERATURE: os << "TEMPERATURE"; break;
+    case FarmingType::HUMIDITY: os << "HUMIDITY"; break;
+    case FarmingType::LOCATION: os << "LOCATION"; break;
+    default:
+        std::cerr << "Faulty farmingType: " << static_cast<uint32_t>(ft) << '\n';
+        std::abort();
+    }
+
+    return os;
+}
+
+using ConversionType   = std::pair<FarmingType, FarmingType>;
+using ConversionRanges = std::vector<ConversionRange>;
+using ConversionMap    = std::map<ConversionType, std::vector<ConversionRange>>;
+
+[[nodiscard]] auto operator<<(std::ostream& os, const std::pair<FarmingType, FarmingType>& ftPair) -> std::ostream& {
+    os << ftPair.first << "->" << ftPair.second;
+    return os;
+}
 
 [[nodiscard]] auto getFarmingTypeFromStr(const std::string& type) -> FarmingType {
     if (type == "seed") return FarmingType::SEED;
@@ -27,6 +65,9 @@ constexpr char conversionPattern[] = "(\\w+)-to-(\\w+) map:";
     std::abort();
 }
 
+constexpr char seedsPattern[]      = "seeds: (.*)";
+constexpr char conversionPattern[] = "(\\w+)-to-(\\w+) map:";
+
 [[nodiscard]] auto parseSeedNumbers(const std::string& line) -> std::vector<uint32_t> {
     std::smatch match;
     if (!std::regex_search(line, match, std::regex(seedsPattern)) || match.empty()) {
@@ -36,7 +77,7 @@ constexpr char conversionPattern[] = "(\\w+)-to-(\\w+) map:";
     }
 
     const std::string numbersString = match[1];
-    return getNumbersFromString(numbersString);
+    return helper::string::getNumbersFromString(numbersString);
 }
 
 [[nodiscard]] auto parseFarmingTypes(const std::string& line) -> std::optional<std::pair<FarmingType, FarmingType>> {
@@ -66,7 +107,7 @@ constexpr char conversionPattern[] = "(\\w+)-to-(\\w+) map:";
             continue;
         }
 
-        const auto numbers = getNumbersFromString(line);
+        const auto numbers = helper::string::getNumbersFromString(line);
 
         const auto      minDest = numbers.at(0);
         const auto      minSrc  = numbers.at(1);
@@ -90,41 +131,6 @@ constexpr char conversionPattern[] = "(\\w+)-to-(\\w+) map:";
     return conversionMap;
 }
 
-[[nodiscard]] auto convertFarmingTypeNumber(const uint32_t currentValue, const ConversionMap& conversionMap, const ConversionType& conversionType) -> uint32_t {
-    const auto& it = conversionMap.find(conversionType);
-    if (it != conversionMap.end()) {
-        for (const auto& conversionRanges : it->second) {
-            const auto convertedValue = conversionRanges.getConvertValue(currentValue);
-            if (convertedValue.has_value()) {
-                return convertedValue.value();
-            }
-        }
-    }
-    return currentValue;
-}
-
-[[maybe_unused]][[nodiscard]] auto getLowestLocationNumber(const std::vector<std::uint32_t>& seedNumbers, const ConversionMap& conversionMap) -> std::string {
-    using namespace Interval;
-    std::optional<uint32_t> minLocation = std::nullopt;
-    std::ranges::for_each(seedNumbers, [&](const uint32_t seedNumber) {
-        const auto soilNumber = convertFarmingTypeNumber(seedNumber, conversionMap, {FarmingType::SEED, FarmingType::SOIL});
-        const auto fertNumber = convertFarmingTypeNumber(soilNumber, conversionMap, {FarmingType::SOIL, FarmingType::FERTILIZER});
-        const auto waterNumber = convertFarmingTypeNumber(fertNumber, conversionMap, {FarmingType::FERTILIZER, FarmingType::WATER});
-        const auto tempNumber = convertFarmingTypeNumber(waterNumber, conversionMap, {FarmingType::WATER, FarmingType::LIGHT});
-        const auto lightNumber = convertFarmingTypeNumber(tempNumber, conversionMap, {FarmingType::LIGHT, FarmingType::TEMPERATURE});
-        const auto humiNumber = convertFarmingTypeNumber(lightNumber, conversionMap, {FarmingType::TEMPERATURE, FarmingType::HUMIDITY});
-        const auto locNumber = convertFarmingTypeNumber(humiNumber, conversionMap, {FarmingType::HUMIDITY, FarmingType::LOCATION});
-
-        if (minLocation.has_value() && minLocation > locNumber) {
-            minLocation = locNumber;
-        } else if (!minLocation.has_value()) {
-            minLocation = locNumber;
-        }
-    });
-
-    return std::to_string(minLocation.value_or(0));
-}
-
 [[nodiscard]] auto getSeedRanges(const std::vector<uint32_t>& seedNumbers) -> std::vector<Range> {
     assert(seedNumbers.size() % 2 == 0);
 
@@ -145,8 +151,7 @@ constexpr char conversionPattern[] = "(\\w+)-to-(\\w+) map:";
         return it->second;
     }
 
-    std::cerr << "Could not find the conversionType: " << conversionType.first << "->"
-              << conversionType.second << " in the conversionMap" << '\n';
+    std::cerr << "Could not find the conversionType: " << conversionType << " in the conversionMap" << '\n';
     std::abort();
 }
 
@@ -173,7 +178,7 @@ auto Day5::part1() -> std::string {
         return Range{nr, nr};
     });
 
-    seedRanges           = Interval::mergeAdjecentRanges(seedRanges);
+    seedRanges           = helper::interval::mergeAdjecentRanges(seedRanges);
     const auto locRanges = getLocationRanges(seedRanges, conversionData);
     return std::to_string(locRanges.front().min);
 };
