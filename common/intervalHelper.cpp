@@ -160,24 +160,28 @@ template <typename T>
             }
         } else if (fromNumberRange->isSuperSetTo(conversionRange->from)) {
             convertedRanges.push_back(convertedRange.value());
-            convertedRanges.push_back(Range{fromNumberRange->min, conversionRange->from.min - 1});
-            fromNumberRanges.at(numberIdx) = {conversionRange->from.max + 1, fromNumberRange.value().max};
+            convertedRanges.push_back(
+                Range{fromNumberRange->min, conversionRange->from.min - 1});
+            fromNumberRanges.at(numberIdx) = {
+                conversionRange->from.max + 1, fromNumberRange.value().max};
             conversionIdx++;
             if (fromNumberRange->max == conversionRange->from.max) {
                 numberIdx++;
             }
         } else if (fromNumberRange->rightIntersctionWith(conversionRange->from)) {
-            convertedRanges.push_back(Range{fromNumberRange->min, conversionRange->from.min - 1});
+            convertedRanges.push_back(
+                Range{fromNumberRange->min, conversionRange->from.min - 1});
             convertedRanges.push_back(convertedRange.value());
             numberIdx++;
         } else if (fromNumberRange->leftIntersctionWith(conversionRange->from)) {
             convertedRanges.push_back(convertedRange.value());
-            fromNumberRanges.at(numberIdx) = {conversionRange->from.max + 1, fromNumberRange.value().max};
+            fromNumberRanges.at(numberIdx) = {
+                conversionRange->from.max + 1, fromNumberRange.value().max};
             conversionIdx++;
         } else {
             std::cerr << "Should never arrive here. \n";
-            std::cerr << "Idx: " << numberIdx << " conversionIdx: " << conversionIdx <<'\n';
-            std::cerr << "FromNumberRange: " << fromNumberRange.value() <<'\n';
+            std::cerr << "Idx: " << numberIdx << " conversionIdx: " << conversionIdx << '\n';
+            std::cerr << "FromNumberRange: " << fromNumberRange.value() << '\n';
             std::cerr << "ConversionRange: " << convertedRange.value() << '\n';
             std::abort();
         }
@@ -186,5 +190,4 @@ template <typename T>
     return mergeAdjecentRanges(convertedRanges);
 }
 
-}  // namespace Interval
-
+}  // namespace helper::interval

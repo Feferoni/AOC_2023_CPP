@@ -2,27 +2,24 @@
 #include <iostream>
 #include <memory>
 #include <string>
+
 #include <cxxabi.h>
 
-template<class T>
+template <class T>
 struct is_streamable {
     static std::false_type test(...);
 
-    template<class U>
-    static auto test(const U& u) -> decltype(std::declval<std::ostream&>() << u,
-                                             std::true_type{});
+    template <class U>
+    static auto test(const U& u) -> decltype(std::declval<std::ostream&>() << u, std::true_type{});
 
     static constexpr bool value = decltype(test(std::declval<T>()))::value;
 };
 
-template<class T>
+template <class T>
 inline constexpr bool is_streamable_v = is_streamable<T>::value;
 
-template <template <typename, typename...> class ContainerType,
-          typename ValueType, typename... Args>
-std::enable_if_t<!is_streamable_v<ContainerType<ValueType, Args...>>,
-                 std::ostream&>
-operator<<(std::ostream& os, ContainerType<ValueType, Args...>& container) {
+template <template <typename, typename...> class ContainerType, typename ValueType, typename... Args>
+std::enable_if_t<!is_streamable_v<ContainerType<ValueType, Args...>>, std::ostream&> operator<<(std::ostream& os, ContainerType<ValueType, Args...>& container) {
     os << "{";
     bool commaFlag = false;
     for (auto const& obj : container) {

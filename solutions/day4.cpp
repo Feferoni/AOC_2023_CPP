@@ -6,8 +6,8 @@
 
 #include "day4.h"
 
-#include "stringHelper.h"
 #include "fileHelper.h"
+#include "stringHelper.h"
 
 namespace {
 
@@ -71,9 +71,9 @@ struct CardData {
     }
 
     const auto winningNumberStrings = helper::string::splitString(splitNumbers[0], " ");
-    const auto yourNumbersStrings   = helper::string::splitString(splitNumbers[1], " ");
+    const auto yourNumbersStrings = helper::string::splitString(splitNumbers[1], " ");
     const auto winningNumbers = parseStringOfNumbers(winningNumberStrings);
-    const auto yourNumbers = parseStringOfNumbers(yourNumbersStrings);
+    const auto yourNumbers    = parseStringOfNumbers(yourNumbersStrings);
     cardData.totalWinningNumbers = getWinningNumbersCount(winningNumbers, yourNumbers);
 
     return cardData;

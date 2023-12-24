@@ -6,8 +6,8 @@
 
 #include "day2.h"
 
-#include "stringHelper.h"
 #include "fileHelper.h"
+#include "stringHelper.h"
 
 namespace {
 constexpr char saveGrabbedCubesPattern[] = "Game (\\d+): (.*)";
@@ -27,7 +27,6 @@ struct ColoredCubes {
 struct Game {
     std::vector<ColoredCubes> grab;
     uint32_t                  nr = 0;
-
 
     [[maybe_unused]] friend std::ostream& operator<<(std::ostream& os, const Game& g) {
         os << "\nGameNumber: " << g.nr << " grabs: " << g.grab;
@@ -103,7 +102,7 @@ enum class Color : int {
 
 [[nodiscard]] auto parseLineIntoGameInfo(const std::string& line) -> Game {
     const auto [gameNr, gameInfo] = splitGameAndGrabs(line);
-    const auto eachGrab           = helper::string::splitStrToStrViews(gameInfo, ";");
+    const auto eachGrab = helper::string::splitStrToStrViews(gameInfo, ";");
 
     Game currentGame{{}, gameNr};
     std::transform(
@@ -170,7 +169,6 @@ auto setValueIfLarger(std::optional<uint32_t>& valueToSet, const auto currentVal
 }
 }  // namespace
 
-
 auto Day2::part1() -> std::string {
     const auto input = getInput<Day2>(std::source_location::current());
     const auto games = getGames(input);
@@ -178,7 +176,6 @@ auto Day2::part1() -> std::string {
     const ColoredCubes gameConfiguration{13, 12, 14};
     return std::to_string(playGamePart1(games, gameConfiguration));
 };
-
 
 auto Day2::part2() -> std::string {
     const auto input  = getInput<Day2>(std::source_location::current());

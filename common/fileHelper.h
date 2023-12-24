@@ -17,5 +17,3 @@ auto getInput(const std::source_location location) -> std::vector<std::string> {
     const auto filePath = getFilePath(location, demangle<Day>());
     return getInputFromFile(filePath);
 }
-
-

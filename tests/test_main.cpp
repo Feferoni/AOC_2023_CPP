@@ -4,8 +4,8 @@
 #include "day3.h"
 #include "day4.h"
 #include "day5.h"
-#include "intervalHelper.h"
 #include "fileHelper.h"
+#include "intervalHelper.h"
 
 #include "catch2/catch_all.hpp"  // IWYU pragma: keep
 
@@ -103,7 +103,6 @@ TEST_CASE("IsSubOrSuper", "SubOrSuper") {
     REQUIRE(r2.isSubSetOf(r1) == false);
 }
 
-
 TEST_CASE("Range_merge", "Merge") {
     helper::interval::Range r1{1, 10};
     helper::interval::Range r2{12, 20};
@@ -112,8 +111,8 @@ TEST_CASE("Range_merge", "Merge") {
 
     r1 = {1, 10};
     r2 = {11, 20};
-    REQUIRE(r1.mergeRanges(r2) == helper::interval::Range{1,20});
-    REQUIRE(r2.mergeRanges(r1) == helper::interval::Range{1,20});
+    REQUIRE(r1.mergeRanges(r2) == helper::interval::Range{1, 20});
+    REQUIRE(r2.mergeRanges(r1) == helper::interval::Range{1, 20});
 
     r1 = {1, 10};
     r2 = {10, 20};
@@ -127,16 +126,16 @@ TEST_CASE("Range_merge", "Merge") {
 }
 
 TEST_CASE("ConversionRangeGetConvertedValue", "ConversionRange") {
-    helper::interval::Range from{56, 92};
-    helper::interval::Range to{60, 96};
+    helper::interval::Range           from{56, 92};
+    helper::interval::Range           to{60, 96};
     helper::interval::ConversionRange cr{from, to};
 
     REQUIRE(cr.getConvertValue(78) == 82);
 }
 
 TEST_CASE("ConversionRangeGetConvertedRange", "ConversionRange") {
-    helper::interval::Range from{10, 20};
-    helper::interval::Range to{30, 40};
+    helper::interval::Range           from{10, 20};
+    helper::interval::Range           to{30, 40};
     helper::interval::ConversionRange cr{from, to};
 
     helper::interval::Range toBeConverted{18, 100};
@@ -145,26 +144,26 @@ TEST_CASE("ConversionRangeGetConvertedRange", "ConversionRange") {
     REQUIRE(convertedRange.has_value() == true);
     REQUIRE(convertedRange.value() == helper::interval::Range{38, 40});
 
-    toBeConverted = {0, 12};
+    toBeConverted  = {0, 12};
     convertedRange = cr.getConvertedRange(toBeConverted);
     REQUIRE(convertedRange.has_value() == true);
     REQUIRE(convertedRange.value() == helper::interval::Range{30, 32});
 
-    toBeConverted = {10, 20};
+    toBeConverted  = {10, 20};
     convertedRange = cr.getConvertedRange(toBeConverted);
     REQUIRE(convertedRange.has_value() == true);
     REQUIRE(convertedRange.value() == helper::interval::Range{30, 40});
 
-    toBeConverted = {0, 100};
+    toBeConverted  = {0, 100};
     convertedRange = cr.getConvertedRange(toBeConverted);
     REQUIRE(convertedRange.has_value() == true);
     REQUIRE(convertedRange.value() == helper::interval::Range{30, 40});
 
-    toBeConverted = {50, 100};
+    toBeConverted  = {50, 100};
     convertedRange = cr.getConvertedRange(toBeConverted);
     REQUIRE(convertedRange.has_value() == false);
 
-    toBeConverted = {0, 9};
+    toBeConverted  = {0, 9};
     convertedRange = cr.getConvertedRange(toBeConverted);
     REQUIRE(convertedRange.has_value() == false);
 }
@@ -177,16 +176,17 @@ TEST_CASE("MergeAdjecentRanges", "Merging") {
     helper::interval::Range r4{30, 35};
     helper::interval::Range r5{36, 40};
 
-    std::vector<helper::interval::Range> rangesBeforeMerge = {r4, r3, r2, r1, r0, r5};
+    std::vector<helper::interval::Range> rangesBeforeMerge = {
+        r4, r3, r2, r1, r0, r5};
     const auto rangesAfterMerge = helper::interval::mergeAdjecentRanges(rangesBeforeMerge);
 
     std::cout << "Before: " << rangesBeforeMerge << '\n';
     std::cout << "After: " << rangesAfterMerge << '\n';
 
     REQUIRE(rangesAfterMerge.size() == 3);
-    REQUIRE(rangesAfterMerge.at(0) == helper::interval::Range{1,3});
-    REQUIRE(rangesAfterMerge.at(1) == helper::interval::Range{5,25});
-    REQUIRE(rangesAfterMerge.at(2) == helper::interval::Range{30,40});
+    REQUIRE(rangesAfterMerge.at(0) == helper::interval::Range{1, 3});
+    REQUIRE(rangesAfterMerge.at(1) == helper::interval::Range{5, 25});
+    REQUIRE(rangesAfterMerge.at(2) == helper::interval::Range{30, 40});
 }
 
 TEST_CASE("Day1_part1", "part1") {
@@ -228,4 +228,3 @@ TEST_CASE("Day5_part1", "part1") {
 TEST_CASE("Day5_part2", "part2") {
     REQUIRE(Day5::part2() == "46");
 }
-

@@ -1,9 +1,9 @@
 #pragma once
 
-#include <iostream>
 #include <cstdint>
-#include <vector>
+#include <iostream>
 #include <optional>
+#include <vector>
 
 namespace helper::interval {
 struct Range {
@@ -44,5 +44,4 @@ struct ConversionRange {
 [[nodiscard]] auto mergeAdjecentRanges(std::vector<Range>& ranges) -> std::vector<Range>;
 [[nodiscard]] auto getConvertedRanges(std::vector<Range> fromNumberRanges, const std::vector<ConversionRange>& conversionRanges) -> std::vector<Range>;
 
-}  // namespace Interval
-
+}  // namespace helper::interval

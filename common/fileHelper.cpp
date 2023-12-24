@@ -51,5 +51,3 @@ auto getInputFromFile(const std::string& filePath) -> std::vector<std::string> {
 
     return lines;
 }
-
-

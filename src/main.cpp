@@ -27,7 +27,8 @@ struct RunData {
 
     friend std::ostream& operator<<(std::ostream& os, const RunData& rd) {
         auto micros = rd.runTime.count();
-        auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(rd.runTime).count();
+        auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(rd.runTime)
+                          .count();
         auto secs = std::chrono::duration_cast<std::chrono::seconds>(rd.runTime).count();
         auto mins = std::chrono::duration_cast<std::chrono::minutes>(rd.runTime).count();
         auto hours = std::chrono::duration_cast<std::chrono::hours>(rd.runTime).count();
