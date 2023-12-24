@@ -7,15 +7,15 @@
 
 namespace {
 // clang-format off
-constexpr std::array<Position, 8> DIRECTIONS = {
-    Position{ 1,  0},  // right
-    Position{-1,  0},  // left
-    Position{ 0,  1},  // up
-    Position{ 0, -1},  // down
-    Position{ 1,  1},  // up; right
-    Position{-1,  1},  // up, left
-    Position{ 1, -1},  // down; right
-    Position{-1, -1}
+constexpr std::array<Position2D, 8> DIRECTIONS = {
+    Position2D{ 1,  0},  // right
+    Position2D{-1,  0},  // left
+    Position2D{ 0,  1},  // up
+    Position2D{ 0, -1},  // down
+    Position2D{ 1,  1},  // up; right
+    Position2D{-1,  1},  // up, left
+    Position2D{ 1, -1},  // down; right
+    Position2D{-1, -1}
 }; // down, left
 
 constexpr std::array<std::pair<uint32_t, uint32_t>, 3> VALID_SYMBOL_RANGES = {
@@ -26,8 +26,8 @@ constexpr std::array<std::pair<uint32_t, uint32_t>, 3> VALID_SYMBOL_RANGES = {
 // clang-format on
 
 struct NumberData {
-    Position startPosition;
-    Position endPosition;
+    Position2D startPosition;
+    Position2D endPosition;
     uint32_t number;
 
     [[maybe_unused]] friend std::ostream& operator<<(std::ostream& os, const NumberData& nd) {
@@ -36,7 +36,7 @@ struct NumberData {
     }
 };
 
-[[nodiscard]] auto getUpperLimitsPosition(const std::vector<std::string>& input) -> Position {
+[[nodiscard]] auto getUpperLimitsPosition(const std::vector<std::string>& input) -> Position2D {
     return {static_cast<int32_t>(input.front().size() - 1),
             static_cast<int32_t>(input.size() - 1)};
 }
@@ -44,8 +44,8 @@ struct NumberData {
 constexpr char GEAR_SYMBOL    = '*';
 constexpr char INVALID_SYMBOL = '.';
 
-[[nodiscard]] auto getNewPosition(const Position& currentPosition, const Position& direction, const Position& positionLimit) -> std::optional<Position> {
-    Position newPosition = currentPosition + direction;
+[[nodiscard]] auto getNewPosition(const Position2D& currentPosition, const Position2D& direction, const Position2D& positionLimit) -> std::optional<Position2D> {
+    Position2D newPosition = currentPosition + direction;
     if (newPosition.isWithinBounds({0, 0}, positionLimit)) {
         return newPosition;
     }
@@ -63,7 +63,7 @@ constexpr char INVALID_SYMBOL = '.';
     });
 }
 
-[[nodiscard]] auto getCharFromInput(const std::vector<std::string>& input, const Position& position, const Position& positionLimit, const std::source_location& caller) -> char {
+[[nodiscard]] auto getCharFromInput(const std::vector<std::string>& input, const Position2D& position, const Position2D& positionLimit, const std::source_location& caller) -> char {
     try {
         return input.at(static_cast<uint32_t>(position.y))
             .at(static_cast<uint32_t>(position.x));
@@ -73,7 +73,7 @@ constexpr char INVALID_SYMBOL = '.';
     }
 }
 
-[[nodiscard]] auto isPositionAdjecentToSymbol(const std::vector<std::string>& input, const Position& position, const Position& positionLimit) -> bool {
+[[nodiscard]] auto isPositionAdjecentToSymbol(const std::vector<std::string>& input, const Position2D& position, const Position2D& positionLimit) -> bool {
     for (const auto& direction : DIRECTIONS) {
         const auto adjecentPosition = getNewPosition(position, direction, positionLimit);
         if (!adjecentPosition.has_value()) {
@@ -97,14 +97,14 @@ constexpr char INVALID_SYMBOL = '.';
 }
 
 [[nodiscard]] auto sumOfPartNumbers(const std::vector<std::string>& input) -> std::string {
-    const Position positionLimit = getUpperLimitsPosition(input);
+    const Position2D positionLimit = getUpperLimitsPosition(input);
 
     uint32_t    sum                      = 0;
     bool        foundAdjecentValidSymbol = false;
     std::string currentNumber            = "";
     for (int32_t y = 0; y <= positionLimit.y; y++) {
         for (int32_t x = 0; x <= positionLimit.x; x++) {
-            const Position currentPosition{x, y};
+            const Position2D currentPosition{x, y};
 
             const char currentChar = getCharFromInput(input, currentPosition, positionLimit, std::source_location::current());
             if (std::isdigit(currentChar)) {
@@ -121,13 +121,13 @@ constexpr char INVALID_SYMBOL = '.';
     return std::to_string(sum);
 }
 
-[[nodiscard]] auto getPositionsOfGears(const std::vector<std::string>& input) -> std::vector<Position> {
-    const Position positionLimit = getUpperLimitsPosition(input);
-    std::vector<Position> gearPositions;
+[[nodiscard]] auto getPositionsOfGears(const std::vector<std::string>& input) -> std::vector<Position2D> {
+    const Position2D positionLimit = getUpperLimitsPosition(input);
+    std::vector<Position2D> gearPositions;
 
     for (int32_t y = 0; y <= positionLimit.y; y++) {
         for (int32_t x = 0; x <= positionLimit.x; x++) {
-            const Position position{static_cast<int32_t>(x), static_cast<int32_t>(y)};
+            const Position2D position{static_cast<int32_t>(x), static_cast<int32_t>(y)};
             const auto currentChar = getCharFromInput(input, position, positionLimit, std::source_location::current());
             if (currentChar == GEAR_SYMBOL) {
                 gearPositions.push_back(position);
@@ -139,7 +139,7 @@ constexpr char INVALID_SYMBOL = '.';
 }
 
 [[nodiscard]] auto getNumberDatas(const std::vector<std::string>& input) -> std::vector<NumberData> {
-    const Position positionLimit = getUpperLimitsPosition(input);
+    const Position2D positionLimit = getUpperLimitsPosition(input);
     std::vector<NumberData> numberDatas;
 
     std::optional<NumberData> currentNumberData = std::nullopt;
@@ -158,7 +158,7 @@ constexpr char INVALID_SYMBOL = '.';
         };
 
         for (int32_t x = 0; x <= positionLimit.x; x++) {
-            const Position position{x, y};
+            const Position2D position{x, y};
             const auto currentChar = getCharFromInput(input, position, positionLimit, std::source_location::current());
             if (std::isdigit(currentChar)) {
                 if (currentNumberData.has_value()) {
@@ -178,7 +178,7 @@ constexpr char INVALID_SYMBOL = '.';
     return numberDatas;
 }
 
-[[nodiscard]] auto isNumberAdjecentToGear(const Position& gearPosition, const Position& numberStart, const Position& numberEnd) -> bool {
+[[nodiscard]] auto isNumberAdjecentToGear(const Position2D& gearPosition, const Position2D& numberStart, const Position2D& numberEnd) -> bool {
     const int32_t xMin = numberStart.x - 1;
     const int32_t xMax = numberEnd.x + 1;
     const int32_t yMin = numberStart.y - 1;
@@ -189,7 +189,7 @@ constexpr char INVALID_SYMBOL = '.';
     return isYInRange && isXInRange;
 }
 
-[[nodiscard]] auto getNumbersAdjecentToGear(const Position& gearPosition, const std::vector<NumberData>& numbers) -> std::vector<NumberData> {
+[[nodiscard]] auto getNumbersAdjecentToGear(const Position2D& gearPosition, const std::vector<NumberData>& numbers) -> std::vector<NumberData> {
     std::vector<NumberData> adjecentNumbers;
 
     for (const auto& number : numbers) {

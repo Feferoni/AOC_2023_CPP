@@ -8,40 +8,8 @@
 
 #include "helperFunctions.h"
 
-enum class FarmingType : uint32_t {
-    SEED,
-    SOIL,
-    FERTILIZER,
-    WATER,
-    LIGHT,
-    TEMPERATURE,
-    HUMIDITY,
-    LOCATION
-};
-
-auto operator<<(std::ostream& os, const FarmingType ft) -> std::ostream& {
-    switch (ft) {
-    case FarmingType::SEED: os << "SEED"; break;
-    case FarmingType::SOIL: os << "SOIL"; break;
-    case FarmingType::FERTILIZER: os << "FERTILIZER"; break;
-    case FarmingType::WATER: os << "WATER"; break;
-    case FarmingType::LIGHT: os << "LIGHT"; break;
-    case FarmingType::TEMPERATURE: os << "TEMPERATURE"; break;
-    case FarmingType::HUMIDITY: os << "HUMIDITY"; break;
-    case FarmingType::LOCATION: os << "LOCATION"; break;
-    default:
-        std::cerr << "Faulty farmingType: " << static_cast<uint32_t>(ft) << '\n';
-        std::abort();
-    }
-
-    return os;
-}
-
-using ConversionType   = std::pair<FarmingType, FarmingType>;
-using ConversionRanges = std::vector<ConversionRange>;
-using ConversionMap    = std::map<ConversionType, ConversionRanges>;
-
 namespace {
+using namespace Interval;
 constexpr char seedsPattern[]      = "seeds: (.*)";
 constexpr char conversionPattern[] = "(\\w+)-to-(\\w+) map:";
 
@@ -115,7 +83,7 @@ constexpr char conversionPattern[] = "(\\w+)-to-(\\w+) map:";
         }
     }
 
-    for (auto& [conversionType, conversionRanges] : conversionMap) {
+    for (auto& [_, conversionRanges] : conversionMap) {
         std::sort(conversionRanges.begin(), conversionRanges.end());
     }
 
@@ -124,22 +92,19 @@ constexpr char conversionPattern[] = "(\\w+)-to-(\\w+) map:";
 
 [[nodiscard]] auto convertFarmingTypeNumber(const uint32_t currentValue, const ConversionMap& conversionMap, const ConversionType& conversionType) -> uint32_t {
     const auto& it = conversionMap.find(conversionType);
-    std::cout << '\n';
     if (it != conversionMap.end()) {
-        std::cout << "Value: " << currentValue << " - " << it->first.first << "->" << it->first.second << ": " << it->second << '\n';
         for (const auto& conversionRanges : it->second) {
-            const auto convertedValue = conversionRanges.convertValue(currentValue);
+            const auto convertedValue = conversionRanges.getConvertValue(currentValue);
             if (convertedValue.has_value()) {
-                std::cout << it->first.first << "->" << it->first.second << " converted value: " << convertedValue.value() << '\n';
                 return convertedValue.value();
             }
         }
     }
-    std::cout << it->first.first << "->" << it->first.second << " same value: " << currentValue << "\n";
     return currentValue;
 }
 
-[[nodiscard]] auto getLowestLocationNumber(const std::vector<std::uint32_t>& seedNumbers, const ConversionMap& conversionMap) -> std::string {
+[[maybe_unused]][[nodiscard]] auto getLowestLocationNumber(const std::vector<std::uint32_t>& seedNumbers, const ConversionMap& conversionMap) -> std::string {
+    using namespace Interval;
     std::optional<uint32_t> minLocation = std::nullopt;
     std::ranges::for_each(seedNumbers, [&](const uint32_t seedNumber) {
         const auto soilNumber = convertFarmingTypeNumber(seedNumber, conversionMap, {FarmingType::SEED, FarmingType::SOIL});
@@ -171,15 +136,30 @@ constexpr char conversionPattern[] = "(\\w+)-to-(\\w+) map:";
         seedRanges.push_back({startNumber, startNumber + range - 1});
     }
 
-    std::sort(seedRanges.begin(), seedRanges.end());
-
-    for (uint32_t i = 0; i < seedRanges.size(); i++) {
-
-    }
-
-    return seedRanges;
+    return mergeAdjecentRanges(seedRanges);
 }
 
+[[nodiscard]] auto getConversionRangesFromMap(const ConversionType& conversionType, const ConversionMap& conversionMap) -> const ConversionRanges& {
+    const auto& it = conversionMap.find(conversionType);
+    if (it != conversionMap.end()) {
+        return it->second;
+    }
+
+    std::cerr << "Could not find the conversionType: " << conversionType.first << "->"
+              << conversionType.second << " in the conversionMap" << '\n';
+    std::abort();
+}
+
+[[nodiscard]] auto getLocationRanges(const std::vector<Range>& seedRanges, const ConversionMap& conversionMap) -> std::vector<Range> {
+    const auto soilRanges = getConvertedRanges(seedRanges, getConversionRangesFromMap({FarmingType::SEED, FarmingType::SOIL}, conversionMap));
+    const auto fertRanges = getConvertedRanges(soilRanges, getConversionRangesFromMap({FarmingType::SOIL, FarmingType::FERTILIZER}, conversionMap));
+    const auto waterRanges = getConvertedRanges(fertRanges, getConversionRangesFromMap({FarmingType::FERTILIZER, FarmingType::WATER}, conversionMap));
+    const auto lightRanges = getConvertedRanges(waterRanges, getConversionRangesFromMap({FarmingType::WATER, FarmingType::LIGHT}, conversionMap));
+    const auto tempRanges = getConvertedRanges(lightRanges, getConversionRangesFromMap({FarmingType::LIGHT, FarmingType::TEMPERATURE}, conversionMap));
+    const auto humidityRanges = getConvertedRanges(tempRanges, getConversionRangesFromMap({FarmingType::TEMPERATURE, FarmingType::HUMIDITY}, conversionMap));
+    const auto locRanges = getConvertedRanges(humidityRanges, getConversionRangesFromMap({FarmingType::HUMIDITY, FarmingType::LOCATION}, conversionMap));
+    return locRanges;
+}
 }  // namespace
 
 auto Day5::part1() -> std::string {
@@ -188,7 +168,14 @@ auto Day5::part1() -> std::string {
     const auto conversionData = parseConversionData(
         std::span(input.begin() + 2, input.end()));
 
-    return getLowestLocationNumber(seedNumbers, conversionData);
+    std::vector<Range> seedRanges;
+    std::transform(seedNumbers.begin(), seedNumbers.end(), std::back_inserter(seedRanges), [](const uint32_t nr) -> Range {
+        return Range{nr, nr};
+    });
+
+    seedRanges           = Interval::mergeAdjecentRanges(seedRanges);
+    const auto locRanges = getLocationRanges(seedRanges, conversionData);
+    return std::to_string(locRanges.front().min);
 };
 
 auto Day5::part2() -> std::string {
@@ -197,8 +184,6 @@ auto Day5::part2() -> std::string {
     const auto conversionData = parseConversionData(
         std::span(input.begin() + 2, input.end()));
     const auto seedRange = getSeedRanges(seedNumbers);
-
-    std::cout << seedRange << '\n';
-
-    return "";
+    const auto locRanges = getLocationRanges(seedRange, conversionData);
+    return std::to_string(locRanges.front().min);
 };
