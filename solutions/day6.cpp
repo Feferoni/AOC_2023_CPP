@@ -1,5 +1,3 @@
-#include <cassert>
-
 #include "day6.h"
 
 #include "errorMsg.h"
@@ -19,11 +17,13 @@ struct RaceData {
 namespace {
 [[nodiscard]] auto parseInputPart1(const std::string& inputStr) -> std::vector<int64_t> {
     const auto splitStr = helper::string::splitString(inputStr, ":");
-    assert(splitStr.size() == 2 && "Size of split string is wrong.");
+    if (splitStr.size() != 2)
+        ERROR_MSG_AND_EXIT("Sie of split string is not 2. Size: " << splitStr.size());
     return helper::string::getNumbersFromString<int64_t>(splitStr.at(1));
 }
 [[nodiscard]] auto parseInputPart1(const std::vector<std::string>& input) -> std::vector<RaceData> {
-    assert(input.size() == 2 && "Size of input is wrong.");
+    if (input.size() != 2)
+        ERROR_MSG_AND_EXIT("Size of input is not 2. Size: " << input.size());
     const auto timeInput = parseInputPart1(input.at(0));
     const auto distInput = parseInputPart1(input.at(1));
 
@@ -36,7 +36,8 @@ namespace {
 
 [[nodiscard]] auto parseNumber(const std::string& inputStr) -> int64_t {
     const auto splitStr = helper::string::splitString(inputStr, ":");
-    assert(splitStr.size() == 2 && "Size of split string is wrong.");
+    if (splitStr.size() != 2)
+        ERROR_MSG_AND_EXIT("Sie of split string is not 2. Size: " << splitStr.size());
     const auto splitNumbers = helper::string::splitString(splitStr.at(1), " ");
 
     std::string numberStr;
@@ -56,7 +57,8 @@ namespace {
 }
 
 [[nodiscard]] auto parseInputPart2(const std::vector<std::string>& input) -> RaceData {
-    assert(input.size() == 2 && "Size of input is wrong.");
+    if (input.size() != 2)
+        ERROR_MSG_AND_EXIT("Size of input is not 2. Size: " << input.size());
     const auto time = parseNumber(input.at(0));
     const auto dist = parseNumber(input.at(1));
     return RaceData{time, dist};

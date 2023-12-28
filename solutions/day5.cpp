@@ -1,4 +1,3 @@
-#include <cassert>
 #include <map>
 #include <optional>
 #include <regex>
@@ -128,10 +127,10 @@ constexpr char conversionPattern[] = "(\\w+)-to-(\\w+) map:";
 }
 
 [[nodiscard]] auto getSeedRanges(const std::vector<uint32_t>& seedNumbers) -> std::vector<Range> {
-    assert(seedNumbers.size() % 2 == 0);
+    if (seedNumbers.size() % 2 != 0)
+        ERROR_MSG_AND_EXIT("Size of seed number is not a multiple of 2. Size: " << seedNumbers.size());
 
     std::vector<Range> seedRanges;
-
     for (uint32_t i = 0; i < seedNumbers.size(); i += 2) {
         const auto& startNumber = seedNumbers.at(i);
         const auto& range       = seedNumbers.at(i + 1);
