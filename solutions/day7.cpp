@@ -68,8 +68,6 @@ enum class HandType : uint32_t {
     return HandType::HIGH_CARD;
 };
 
-
-
 [[nodiscard]] auto getHandTypePart2(const std::string_view hand) -> HandType {
     HandType   handType   = getHandTypePart1(hand);
     const auto labelCount = getLabelCount(hand);
@@ -108,7 +106,7 @@ enum class HandType : uint32_t {
         if (nrOfJokers.value() == 2) return HandType::FOUR_OF_A_KIND;
         ERROR_MSG_AND_EXIT("Faulty hand: " << hand);
     }
-    case HandType::PAIR: {  // KK J 12 -> three of a kind // JJ K 12 ->
+    case HandType::PAIR: {
         if (nrOfJokers.value() == 1) return HandType::THREE_OF_A_KIND;
         if (nrOfJokers.value() == 2) return HandType::THREE_OF_A_KIND;
         ERROR_MSG_AND_EXIT("Faulty hand: " << hand);

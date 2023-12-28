@@ -12,6 +12,7 @@
 #include "day5.h"
 #include "day6.h"
 #include "day7.h"
+#include "day8.h"
 #include "inputHelper.h"
 
 namespace {
@@ -73,6 +74,7 @@ auto main() -> int {
     printSolutionFor<Day5>();
     printSolutionFor<Day6>();
     printSolutionFor<Day7>();
+    printSolutionFor<Day8>();
 
     return 0;
 }
