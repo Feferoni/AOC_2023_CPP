@@ -170,7 +170,7 @@ auto Day2::part1() -> std::string {
 };
 
 auto Day2::part2() -> std::string {
-    const auto input  = helper::input::getInput<Day2>(std::source_location::current());
+    const auto input = helper::input::getInput<Day2>(std::source_location::current());
     const auto games  = getGames(input);
     const auto result = playGamePart2(games);
     return std::to_string(result);

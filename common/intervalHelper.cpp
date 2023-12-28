@@ -1,5 +1,6 @@
-#include "errorMsg.h"
 #include "intervalHelper.h"
+
+#include "errorMsg.h"
 
 namespace helper::interval {
 [[nodiscard]] auto Range::isAdjecentTo(const Range& other) const -> bool {

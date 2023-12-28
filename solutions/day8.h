@@ -2,8 +2,7 @@
 
 #include <string>
 
-class Day8
-{
+class Day8 {
 public:
     [[nodiscard]] static auto part1() -> std::string;
     [[nodiscard]] static auto part2() -> std::string;

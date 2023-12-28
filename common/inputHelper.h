@@ -6,7 +6,7 @@
 
 #include <cxxabi.h>
 
-#include "errorMsg.h" // IWYU pragma: keep
+#include "errorMsg.h"  // IWYU pragma: keep
 #include "helperTemplates.h"
 
 namespace helper::input {
@@ -19,4 +19,4 @@ auto getInput(const std::source_location location) -> std::vector<std::string> {
     const auto filePath = getFilePath(location, demangle<Day>());
     return getInputFromFile(filePath);
 }
-}  // namespace helper::file
+}  // namespace helper::input

@@ -162,7 +162,7 @@ constexpr char conversionPattern[] = "(\\w+)-to-(\\w+) map:";
 }  // namespace
 
 auto Day5::part1() -> std::string {
-    const auto input          = helper::input::getInput<Day5>(std::source_location::current());
+    const auto input = helper::input::getInput<Day5>(std::source_location::current());
     const auto seedNumbers    = parseSeedNumbers(input.at(0));
     const auto conversionData = parseConversionData(
         std::span(input.begin() + 2, input.end()));
@@ -178,7 +178,7 @@ auto Day5::part1() -> std::string {
 };
 
 auto Day5::part2() -> std::string {
-    const auto input          = helper::input::getInput<Day5>(std::source_location::current());
+    const auto input = helper::input::getInput<Day5>(std::source_location::current());
     const auto seedNumbers    = parseSeedNumbers(input.at(0));
     const auto conversionData = parseConversionData(
         std::span(input.begin() + 2, input.end()));

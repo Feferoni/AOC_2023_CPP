@@ -167,7 +167,6 @@ private:
             for (uint32_t i = 0; i < cardLabels.size(); i++) {
                 if (label == cardLabels[i]) return i;
             }
-
             ERROR_MSG_AND_EXIT("Non valid label: " << label);
         };
 
