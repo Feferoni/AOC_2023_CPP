@@ -6,6 +6,7 @@
 
 #include "day4.h"
 
+#include "errorMsg.h"
 #include "inputHelper.h"
 #include "stringHelper.h"
 
@@ -55,10 +56,7 @@ struct CardData {
     std::smatch cardMatch;
     if (!std::regex_search(inputLine, cardMatch, std::regex(cardPattern)) ||
         cardMatch.empty()) {
-        std::cerr << "Could not extract the grabbed cubes:\n"
-                  << inputLine << "\nwith regex:\n"
-                  << cardPattern << '\n';
-        std::abort();
+        ERROR_MSG_AND_EXIT("Could not extract pattern: " << cardPattern << " from: " << inputLine);
     }
 
     cardData.cardNumber = std::stoul(cardMatch[1]);
@@ -66,8 +64,7 @@ struct CardData {
     const auto& allNumbersStr = cardMatch[2];
     const auto  splitNumbers  = helper::string::splitString(allNumbersStr, "|");
     if (splitNumbers.size() != 2) {
-        std::cerr << "Split numbers is wrong: " << splitNumbers << '\n';
-        std::abort();
+        ERROR_MSG_AND_EXIT("Split numbers is wrong: " << splitNumbers);
     }
 
     const auto winningNumberStrings = helper::string::splitString(splitNumbers[0], " ");
@@ -95,7 +92,7 @@ struct CardData {
 }  // namespace
 
 auto Day4::part1() -> std::string {
-    const auto input       = helper::input::getInput<Day4>(std::source_location::current());
+    const auto input = helper::input::getInput<Day4>(std::source_location::current());
     const auto cards       = parseInputToCards(input);
     uint32_t   totaltScore = 0;
     std::ranges::for_each(cards, [&totaltScore](const CardData& cardData) {
@@ -106,7 +103,7 @@ auto Day4::part1() -> std::string {
 
 auto Day4::part2() -> std::string {
     const auto input = helper::input::getInput<Day4>(std::source_location::current());
-    const auto cards = parseInputToCards(input);
+    const auto            cards = parseInputToCards(input);
     std::vector<uint32_t> cardCount(cards.size(), 1);
 
     for (uint32_t i = 0; i < cardCount.size(); i++) {

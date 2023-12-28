@@ -1,10 +1,11 @@
 #pragma once
 
 #include <algorithm>
-#include <iostream>
 #include <string>
 #include <string_view>
 #include <vector>
+
+#include "errorMsg.h"
 
 namespace helper::string {
 [[nodiscard]] auto splitString(const std::string& str, const std::string& delimiter) -> std::vector<std::string>;
@@ -38,15 +39,12 @@ template <Numeric T>
                 } else if constexpr (std::is_same_v<T, long double>) {
                     numbers.push_back(std::stold(str));
                 } else {
-                    std::cerr << "Unssuported Numeric type. \n";
-                    std::abort();
+                    ERROR_MSG_AND_EXIT("Unsupported numeric type.");
                 }
             } catch (const std::invalid_argument& ex) {
-                std::cerr << ex.what() << " - " << str << '\n';
-                std::abort();
+                ERROR_MSG_AND_EXIT(ex.what() << " - " << str);
             } catch (const std::out_of_range& ex) {
-                std::cerr << ex.what() << " - " << str << '\n';
-                std::abort();
+                ERROR_MSG_AND_EXIT(ex.what() << " - " << str);
             }
         }
     });

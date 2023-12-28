@@ -6,6 +6,7 @@
 
 #include "day2.h"
 
+#include "errorMsg.h"
 #include "inputHelper.h"
 #include "stringHelper.h"
 
@@ -44,19 +45,14 @@ enum class Color : int {
     if (str == "green") return Color::GREEN;
     if (str == "blue") return Color::BLUE;
     if (str == "red") return Color::RED;
-
-    std::cerr << "Faulty color: " << str << '\n';
-    std::abort();
+    ERROR_MSG_AND_EXIT("Faulty color: " << str);
 }
 
 [[nodiscard]] auto splitGameAndGrabs(const std::string& line) -> std::pair<uint32_t, std::string> {
     std::smatch grabbedCubesMatch;
     if (!std::regex_search(line, grabbedCubesMatch, std::regex(saveGrabbedCubesPattern)) ||
         grabbedCubesMatch.empty()) {
-        std::cerr << "Could not extract the grabbed cubes:\n"
-                  << line << "\nwith regex:\n"
-                  << saveGrabbedCubesPattern << '\n';
-        std::abort();
+        ERROR_MSG_AND_EXIT("Could not extract pattern: " << saveGrabbedCubesPattern << " from: " << line);
     }
 
     return {std::stoul(grabbedCubesMatch[1]), grabbedCubesMatch[2]};
@@ -69,10 +65,7 @@ enum class Color : int {
     std::smatch match;
     if (!std::regex_search(colorInfo, match, std::regex(getColorInfoPattern)) ||
         match.empty()) {
-        std::cerr << "Could not extract color and number from:\n"
-                  << str << "\nwith regex:\n"
-                  << getColorInfoPattern << '\n';
-        std::abort();
+        ERROR_MSG_AND_EXIT("Could not extract pattern: " << getColorInfoPattern << " from: " << str);
     }
 
     auto count = std::stoul(match[1]);
@@ -92,8 +85,7 @@ enum class Color : int {
         case Color::RED: cubes.red += count; break;
         case Color::BLUE: cubes.blue += count; break;
         default:
-            std::cerr << "Faulty enum color: " << static_cast<uint32_t>(color) << '\n';
-            std::abort();
+            ERROR_MSG_AND_EXIT("Faulty enum color: " << static_cast<uint32_t>(color));
         }
     }
 

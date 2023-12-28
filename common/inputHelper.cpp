@@ -1,6 +1,5 @@
 #include <filesystem>
 #include <fstream>
-#include <iostream>
 #include <regex>
 
 #include <cxxabi.h>
@@ -18,9 +17,7 @@ auto extractDayFromfunctionName(const std::string& functionSignature) -> std::st
         !matches.empty()) {
         return matches[1];
     }
-
-    std::cerr << "Could not extract a day from the function: " << functionSignature << " with regex: " << functionNamePatternString << '\n';
-    std::abort();
+    ERROR_MSG_AND_EXIT("Could not extract a day from the function: " << functionSignature << " with regex: " << functionNamePatternString);
 }
 }  // namespace
 namespace helper::input {
@@ -45,8 +42,7 @@ auto getInputFromFile(const std::string& filePath) -> std::vector<std::string> {
         }
         file.close();
     } else {
-        std::cerr << "Unable to open file: " << filePath << '\n';
-        std::abort();
+        ERROR_MSG_AND_EXIT("Unable to open file: " << filePath);
     }
 
     return lines;

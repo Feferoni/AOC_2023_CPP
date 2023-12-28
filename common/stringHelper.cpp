@@ -1,6 +1,3 @@
-#include <algorithm>
-#include <iostream>
-
 #include "stringHelper.h"
 
 namespace helper::string {

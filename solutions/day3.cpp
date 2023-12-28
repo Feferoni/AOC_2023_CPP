@@ -3,6 +3,7 @@
 
 #include "day3.h"
 
+#include "errorMsg.h"
 #include "inputHelper.h"
 #include "positionHelper.h"
 
@@ -70,8 +71,7 @@ constexpr char INVALID_SYMBOL = '.';
         return input.at(static_cast<uint32_t>(position.y))
             .at(static_cast<uint32_t>(position.x));
     } catch (const std::out_of_range& ex) {
-        std::cerr << ex.what() << ": " << caller.function_name() << " current position: " << positionLimit << " limit: " << positionLimit << '\n';
-        std::abort();
+        ERROR_MSG_AND_EXIT(ex.what() << ": " << caller.function_name() << " current position: " << positionLimit << " limit: " << positionLimit);
     }
 }
 

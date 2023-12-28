@@ -1,4 +1,5 @@
-#include <intervalHelper.h>
+#include "errorMsg.h"
+#include "intervalHelper.h"
 
 namespace helper::interval {
 [[nodiscard]] auto Range::isAdjecentTo(const Range& other) const -> bool {
@@ -179,11 +180,8 @@ template <typename T>
                 conversionRange->from.max + 1, fromNumberRange.value().max};
             conversionIdx++;
         } else {
-            std::cerr << "Should never arrive here. \n";
-            std::cerr << "Idx: " << numberIdx << " conversionIdx: " << conversionIdx << '\n';
-            std::cerr << "FromNumberRange: " << fromNumberRange.value() << '\n';
-            std::cerr << "ConversionRange: " << convertedRange.value() << '\n';
-            std::abort();
+            ERROR_MSG_AND_EXIT("Idx: " << numberIdx << " conversionIdx: " << conversionIdx << '\n'
+                                       << "From: " << *fromNumberRange << "\nConversion: " << *convertedRange);
         }
     }
 

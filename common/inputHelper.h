@@ -6,6 +6,7 @@
 
 #include <cxxabi.h>
 
+#include "errorMsg.h" // IWYU pragma: keep
 #include "helperTemplates.h"
 
 namespace helper::input {

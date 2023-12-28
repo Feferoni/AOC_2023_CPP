@@ -37,6 +37,7 @@ add_subdirectory(common)
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 
 set(COMPILER_FLAGS -O3)
+# set(COMPILER_FLAGS -O0 -g)
 set(IGNORE_FLAGS)
 
 target_compile_options(${PROJECT_NAME} PRIVATE ${COMPILER_FLAGS} ${IGNORE_FLAGS})

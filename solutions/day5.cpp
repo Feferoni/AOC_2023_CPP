@@ -6,6 +6,7 @@
 
 #include "day5.h"
 
+#include "errorMsg.h"
 #include "inputHelper.h"
 #include "intervalHelper.h"
 #include "stringHelper.h"
@@ -35,8 +36,7 @@ auto operator<<(std::ostream& os, const FarmingType ft) -> std::ostream& {
     case FarmingType::HUMIDITY: os << "HUMIDITY"; break;
     case FarmingType::LOCATION: os << "LOCATION"; break;
     default:
-        std::cerr << "Faulty farmingType: " << static_cast<uint32_t>(ft) << '\n';
-        std::abort();
+        ERROR_MSG_AND_EXIT("Faulty farmingType: " << static_cast<uint32_t>(ft));
     }
 
     return os;
@@ -60,9 +60,7 @@ using ConversionMap    = std::map<ConversionType, std::vector<ConversionRange>>;
     if (type == "temperature") return FarmingType::TEMPERATURE;
     if (type == "humidity") return FarmingType::HUMIDITY;
     if (type == "location") return FarmingType::LOCATION;
-
-    std::cerr << "Not a valid type: " << type << '\n';
-    std::abort();
+    ERROR_MSG_AND_EXIT("Not a valid type: " << type);
 }
 
 constexpr char seedsPattern[]      = "seeds: (.*)";
@@ -71,9 +69,7 @@ constexpr char conversionPattern[] = "(\\w+)-to-(\\w+) map:";
 [[nodiscard]] auto parseSeedNumbers(const std::string& line) -> std::vector<uint32_t> {
     std::smatch match;
     if (!std::regex_search(line, match, std::regex(seedsPattern)) || match.empty()) {
-        std::cerr << "Could not extract: " << seedsPattern << "\n";
-        std::cerr << "From: " << line << '\n';
-        std::abort();
+        ERROR_MSG_AND_EXIT("Could not extract: " << seedsPattern << " from: " << line);
     }
 
     const std::string numbersString = match[1];
@@ -150,9 +146,7 @@ constexpr char conversionPattern[] = "(\\w+)-to-(\\w+) map:";
     if (it != conversionMap.end()) {
         return it->second;
     }
-
-    std::cerr << "Could not find the conversionType: " << conversionType << " in the conversionMap" << '\n';
-    std::abort();
+    ERROR_MSG_AND_EXIT("Could not find the conversionType: " << conversionType << " in the conversionMap");
 }
 
 [[nodiscard]] auto getLocationRanges(const std::vector<Range>& seedRanges, const ConversionMap& conversionMap) -> std::vector<Range> {

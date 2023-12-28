@@ -2,6 +2,7 @@
 
 #include "day6.h"
 
+#include "errorMsg.h"
 #include "inputHelper.h"
 #include "stringHelper.h"
 
@@ -48,11 +49,9 @@ namespace {
     try {
         return std::stoll(numberStr);
     } catch (const std::invalid_argument& ex) {
-        std::cerr << ex.what() << " - " << numberStr << '\n';
-        std::abort();
+        ERROR_MSG_AND_EXIT(ex.what() << " - " << numberStr);
     } catch (const std::out_of_range& ex) {
-        std::cerr << ex.what() << " - " << numberStr << '\n';
-        std::abort();
+        ERROR_MSG_AND_EXIT(ex.what() << " - " << numberStr);
     }
 }
 
