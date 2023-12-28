@@ -145,10 +145,10 @@ struct CardHand {
 
     [[nodiscard]] auto operator<(const CardHand& other) const -> bool {
         if (handType == other.handType) {
-            return isStrongerThan(other);
+            return !isStrongerThan(other);
         }
 
-        return handType > other.handType;
+        return handType < other.handType;
     }
 
     [[maybe_unused]] friend auto operator<<(std::ostream& os, const CardHand& ch) -> std::ostream& {
@@ -202,13 +202,13 @@ private:
 auto Day7::part1() -> std::string {
     const auto input = helper::input::getInput<Day7>(std::source_location::current());
     auto cardHands = parseInput(input, getHandTypePart1, std::span<const char>(cardLabelsPart1));
-    std::sort(cardHands.begin(), cardHands.end());
+    std::sort(cardHands.rbegin(), cardHands.rend());
     return std::to_string(getSumOfBid(cardHands));
 };
 
 auto Day7::part2() -> std::string {
     const auto input = helper::input::getInput<Day7>(std::source_location::current());
     auto cardHands = parseInput(input, getHandTypePart2, std::span<const char>(cardLabelsPart2));
-    std::sort(cardHands.begin(), cardHands.end());
+    std::sort(cardHands.rbegin(), cardHands.rend());
     return std::to_string(getSumOfBid(cardHands));
 };
