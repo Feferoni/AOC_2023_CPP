@@ -13,7 +13,7 @@
 #include "day6.h"
 #include "day7.h"
 #include "day8.h"
-#include "inputHelper.h"
+#include "common/inc/inputHelper.h"
 
 namespace {
 template <class Day>
@@ -53,9 +53,9 @@ struct RunData {
 
 auto executePart(const std::function<std::string()>& function) -> RunData {
     const auto start         = std::chrono::high_resolution_clock::now();
-    const auto part1Solution = function();
+    const auto partSolution = function();
     const auto end           = std::chrono::high_resolution_clock::now();
-    return {part1Solution, std::chrono::duration_cast<std::chrono::microseconds>(end - start)};
+    return {partSolution, std::chrono::duration_cast<std::chrono::microseconds>(end - start)};
 }
 
 template <Solution Day>

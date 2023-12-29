@@ -41,7 +41,7 @@ struct ConversionRange {
     }
 };
 
-[[nodiscard]] auto mergeAdjecentRanges(std::vector<Range>& ranges) -> std::vector<Range>;
+[[nodiscard]] auto sortAndMergeAdjecentRanges(std::vector<Range>& ranges) -> std::vector<Range>;
 [[nodiscard]] auto getConvertedRanges(std::vector<Range> fromNumberRanges, const std::vector<ConversionRange>& conversionRanges) -> std::vector<Range>;
 
 }  // namespace helper::interval

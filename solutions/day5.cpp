@@ -5,10 +5,10 @@
 
 #include "day5.h"
 
-#include "errorMsg.h"
-#include "inputHelper.h"
-#include "intervalHelper.h"
-#include "stringHelper.h"
+#include "common/inc/errorMsg.h"
+#include "common/inc/inputHelper.h"
+#include "common/inc/intervalHelper.h"
+#include "common/inc/stringHelper.h"
 
 namespace {
 using namespace helper::interval;
@@ -137,7 +137,7 @@ constexpr char conversionPattern[] = "(\\w+)-to-(\\w+) map:";
         seedRanges.push_back({startNumber, startNumber + range - 1});
     }
 
-    return mergeAdjecentRanges(seedRanges);
+    return sortAndMergeAdjecentRanges(seedRanges);
 }
 
 [[nodiscard]] auto getConversionRangesFromMap(const ConversionType& conversionType, const ConversionMap& conversionMap) -> const ConversionRanges& {
@@ -171,7 +171,7 @@ auto Day5::part1() -> std::string {
         return Range{nr, nr};
     });
 
-    seedRanges           = helper::interval::mergeAdjecentRanges(seedRanges);
+    seedRanges           = helper::interval::sortAndMergeAdjecentRanges(seedRanges);
     const auto locRanges = getLocationRanges(seedRanges, conversionData);
     return std::to_string(locRanges.front().min);
 };

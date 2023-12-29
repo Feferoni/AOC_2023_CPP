@@ -5,8 +5,8 @@
 
 #include "day7.h"
 
-#include "errorMsg.h"
-#include "inputHelper.h"
+#include "common/inc/errorMsg.h"
+#include "common/inc/inputHelper.h"
 
 namespace {
 [[maybe_unused]] constexpr std::array<char, 13> cardLabelsPart1 = {
@@ -182,7 +182,7 @@ private:
     }
 };
 
-[[nodiscard]] auto parseInput(const std::vector<std::string>& input, const std::function<HandType(const std::string_view)>& createHandTypeFunction, const std::span<const char> cardLabels) -> std::vector<CardHand> {
+[[nodiscard]] auto parseInputToCardHands(const std::vector<std::string>& input, const std::function<HandType(const std::string_view)>& createHandTypeFunction, const std::span<const char> cardLabels) -> std::vector<CardHand> {
     std::vector<CardHand> cardHands;
     std::ranges::transform(input, std::back_inserter(cardHands), [&createHandTypeFunction, &cardLabels](const std::string& input) {
         return CardHand(input, createHandTypeFunction, cardLabels);
@@ -201,14 +201,14 @@ private:
 
 auto Day7::part1() -> std::string {
     const auto input = helper::input::getInput<Day7>(std::source_location::current());
-    auto cardHands = parseInput(input, getHandTypePart1, std::span<const char>(cardLabelsPart1));
+    auto cardHands = parseInputToCardHands(input, getHandTypePart1, std::span<const char>(cardLabelsPart1));
     std::sort(cardHands.rbegin(), cardHands.rend());
     return std::to_string(getSumOfBid(cardHands));
 };
 
 auto Day7::part2() -> std::string {
     const auto input = helper::input::getInput<Day7>(std::source_location::current());
-    auto cardHands = parseInput(input, getHandTypePart2, std::span<const char>(cardLabelsPart2));
+    auto cardHands = parseInputToCardHands(input, getHandTypePart2, std::span<const char>(cardLabelsPart2));
     std::sort(cardHands.rbegin(), cardHands.rend());
     return std::to_string(getSumOfBid(cardHands));
 };

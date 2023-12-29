@@ -3,9 +3,9 @@
 
 #include "day3.h"
 
-#include "errorMsg.h"
-#include "inputHelper.h"
-#include "positionHelper.h"
+#include "common/inc/errorMsg.h"
+#include "common/inc/inputHelper.h"
+#include "common/inc/positionHelper.h"
 
 namespace {
 using namespace helper::position;

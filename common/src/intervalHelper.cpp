@@ -1,6 +1,5 @@
-#include "intervalHelper.h"
-
-#include "errorMsg.h"
+#include "../inc/intervalHelper.h"
+#include "../inc/errorMsg.h"
 
 namespace helper::interval {
 [[nodiscard]] auto Range::isAdjecentTo(const Range& other) const -> bool {
@@ -87,7 +86,7 @@ namespace helper::interval {
     return from < cr.from;
 }
 
-[[nodiscard]] auto mergeAdjecentRanges(std::vector<Range>& ranges) -> std::vector<Range> {
+[[nodiscard]] auto sortAndMergeAdjecentRanges(std::vector<Range>& ranges) -> std::vector<Range> {
     std::sort(ranges.begin(), ranges.end());
     std::vector<Range> mergedRanges;
 
@@ -186,7 +185,7 @@ template <typename T>
         }
     }
 
-    return mergeAdjecentRanges(convertedRanges);
+    return sortAndMergeAdjecentRanges(convertedRanges);
 }
 
 }  // namespace helper::interval

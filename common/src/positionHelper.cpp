@@ -1,6 +1,6 @@
 #include <string>
 
-#include "positionHelper.h"
+#include "../inc/positionHelper.h"
 
 namespace helper::position {
 [[nodiscard]] auto Position2D::isWithinBounds(const Position2D& lower, const Position2D& upper) const -> bool {

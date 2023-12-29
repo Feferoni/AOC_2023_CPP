@@ -1,8 +1,8 @@
 #include "day6.h"
 
-#include "errorMsg.h"
-#include "inputHelper.h"
-#include "stringHelper.h"
+#include "common/inc/errorMsg.h"
+#include "common/inc/inputHelper.h"
+#include "common/inc/stringHelper.h"
 
 struct RaceData {
     int64_t time;
@@ -21,7 +21,7 @@ namespace {
         ERROR_MSG_AND_EXIT("Sie of split string is not 2. Size: " << splitStr.size());
     return helper::string::getNumbersFromString<int64_t>(splitStr.at(1));
 }
-[[nodiscard]] auto parseInputPart1(const std::vector<std::string>& input) -> std::vector<RaceData> {
+[[nodiscard]] auto parseInputToRacesDataPart1(const std::vector<std::string>& input) -> std::vector<RaceData> {
     if (input.size() != 2)
         ERROR_MSG_AND_EXIT("Size of input is not 2. Size: " << input.size());
     const auto timeInput = parseInputPart1(input.at(0));
@@ -56,7 +56,7 @@ namespace {
     }
 }
 
-[[nodiscard]] auto parseInputPart2(const std::vector<std::string>& input) -> RaceData {
+[[nodiscard]] auto parseInputToRaceDataPart2(const std::vector<std::string>& input) -> RaceData {
     if (input.size() != 2)
         ERROR_MSG_AND_EXIT("Size of input is not 2. Size: " << input.size());
     const auto time = parseNumber(input.at(0));
@@ -92,12 +92,12 @@ namespace {
 
 auto Day6::part1() -> std::string {
     const auto input = helper::input::getInput<Day6>(std::source_location::current());
-    const auto parsedInput = parseInputPart1(input);
-    return std::to_string(countNumberOfWinningScenarios(parsedInput));
+    const auto racesData = parseInputToRacesDataPart1(input);
+    return std::to_string(countNumberOfWinningScenarios(racesData));
 };
 
 auto Day6::part2() -> std::string {
     const auto input = helper::input::getInput<Day6>(std::source_location::current());
-    const auto parsedInput = parseInputPart2(input);
-    return std::to_string(countNumberOfWinningScenarios({parsedInput}));
+    const auto raceData = parseInputToRaceDataPart2(input);
+    return std::to_string(countNumberOfWinningScenarios({raceData}));
 };

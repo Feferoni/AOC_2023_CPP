@@ -1,4 +1,4 @@
-#include "stringHelper.h"
+#include "../inc/stringHelper.h"
 
 namespace helper::string {
 [[nodiscard]] auto splitString(const std::string& str, const std::string& delimiter) -> std::vector<std::string> {

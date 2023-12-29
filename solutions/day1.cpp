@@ -3,7 +3,7 @@
 
 #include "day1.h"
 
-#include "inputHelper.h"
+#include "common/inc/inputHelper.h"
 
 namespace {
 constexpr std::array<std::pair<std::string_view, std::string_view>, 15> conversionTable = {std::pair{"eightwo", "82"},   std::pair{"eighthree", "83"},

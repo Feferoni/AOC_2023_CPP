@@ -6,9 +6,9 @@
 
 #include "day2.h"
 
-#include "errorMsg.h"
-#include "inputHelper.h"
-#include "stringHelper.h"
+#include "common/inc/errorMsg.h"
+#include "common/inc/inputHelper.h"
+#include "common/inc/stringHelper.h"
 
 namespace {
 constexpr char saveGrabbedCubesPattern[] = "Game (\\d+): (.*)";
