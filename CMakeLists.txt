@@ -18,10 +18,9 @@ add_compile_options(-Wall -Wpedantic -Wextra -Werror)
 
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/
-    ${CMAKE_CURRENT_SOURCE_DIR}/solutions
 )
 
-file(GLOB SOLUTION_SOURCES CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/solutions/*.cpp")
+file(GLOB SOLUTION_SOURCES CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/solutions/src/*.cpp")
 file(GLOB COMMON_SOURCES CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/common/src/*.cpp")
 
 set(SOURCE_FILES
@@ -31,14 +30,14 @@ set(SOURCE_FILES
 )
 
 add_subdirectory(tests)
-add_subdirectory(solutions)
+add_subdirectory(solutions/src)
+add_subdirectory(solutions/test)
 add_subdirectory(common/src)
 add_subdirectory(common/test)
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 
 set(COMPILER_FLAGS -O3)
-# set(COMPILER_FLAGS -O0 -g)
 set(IGNORE_FLAGS)
 
 target_compile_options(${PROJECT_NAME} PRIVATE ${COMPILER_FLAGS} ${IGNORE_FLAGS})

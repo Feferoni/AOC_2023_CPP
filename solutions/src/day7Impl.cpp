@@ -3,7 +3,7 @@
 #include <optional>
 #include <span>
 
-#include "day7.h"
+#include "day7Impl.h"
 
 #include "common/inc/errorMsg.h"
 #include "common/inc/inputHelper.h"
@@ -199,14 +199,18 @@ private:
 }
 }  // namespace
 
-auto Day7::part1() -> std::string {
+auto Day7::getInstance() -> std::unique_ptr<Day7> {
+    return std::make_unique<Day7Impl>();
+}
+
+auto Day7Impl::part1() -> std::string {
     const auto input = helper::input::getInput<Day7>(std::source_location::current());
     auto cardHands = parseInputToCardHands(input, getHandTypePart1, std::span<const char>(cardLabelsPart1));
     std::sort(cardHands.rbegin(), cardHands.rend());
     return std::to_string(getSumOfBid(cardHands));
 };
 
-auto Day7::part2() -> std::string {
+auto Day7Impl::part2() -> std::string {
     const auto input = helper::input::getInput<Day7>(std::source_location::current());
     auto cardHands = parseInputToCardHands(input, getHandTypePart2, std::span<const char>(cardLabelsPart2));
     std::sort(cardHands.rbegin(), cardHands.rend());

@@ -3,7 +3,7 @@
 #include <ranges>
 #include <regex>
 
-#include "day4.h"
+#include "day4Impl.h"
 
 #include "common/inc/errorMsg.h"
 #include "common/inc/inputHelper.h"
@@ -90,7 +90,11 @@ struct CardData {
 }
 }  // namespace
 
-auto Day4::part1() -> std::string {
+auto Day4::getInstance() -> std::unique_ptr<Day4> {
+    return std::make_unique<Day4Impl>();
+}
+
+auto Day4Impl::part1() -> std::string {
     const auto input = helper::input::getInput<Day4>(std::source_location::current());
     const auto cards       = parseInputToCards(input);
     uint32_t   totaltScore = 0;
@@ -100,7 +104,7 @@ auto Day4::part1() -> std::string {
     return std::to_string(totaltScore);
 };
 
-auto Day4::part2() -> std::string {
+auto Day4Impl::part2() -> std::string {
     const auto input = helper::input::getInput<Day4>(std::source_location::current());
     const auto            cards = parseInputToCards(input);
     std::vector<uint32_t> cardCount(cards.size(), 1);

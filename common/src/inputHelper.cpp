@@ -8,7 +8,7 @@
 
 namespace {
 constexpr char
-    functionNamePatternString[] = "static std::string Day\\d+::(.*)\\(\\)";
+    functionNamePatternString[] = "std::string Day\\d+Impl::(.*)\\(\\)";
 
 // could fetch the class name and function here, but to lazy to fix
 auto extractDayFromfunctionName(const std::string& functionSignature) -> std::string {

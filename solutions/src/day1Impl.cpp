@@ -1,7 +1,7 @@
 #include <cctype>
 #include <ranges>
 
-#include "day1.h"
+#include "day1Impl.h"
 
 #include "common/inc/inputHelper.h"
 
@@ -42,12 +42,16 @@ constexpr std::array<std::pair<std::string_view, std::string_view>, 15> conversi
 }
 }  // namespace
 
-auto Day1::part1() -> std::string {
+auto Day1::getInstance() -> std::unique_ptr<Day1> {
+    return std::make_unique<Day1Impl>();
+}
+
+auto Day1Impl::part1() -> std::string {
     const auto input = helper::input::getInput<Day1>(std::source_location::current());
     return getSumOfNumbers(input);
 };
 
-auto Day1::part2() -> std::string {
+auto Day1Impl::part2() -> std::string {
     const auto input = helper::input::getInput<Day1>(std::source_location::current());
     const auto convertedInput = input | std::views::transform(replaceAlpahNumbers);
     return getSumOfNumbers(convertedInput);

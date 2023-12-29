@@ -3,7 +3,7 @@
 #include <regex>
 #include <span>
 
-#include "day5.h"
+#include "day5Impl.h"
 
 #include "common/inc/errorMsg.h"
 #include "common/inc/inputHelper.h"
@@ -160,7 +160,11 @@ constexpr char conversionPattern[] = "(\\w+)-to-(\\w+) map:";
 }
 }  // namespace
 
-auto Day5::part1() -> std::string {
+auto Day5::getInstance() -> std::unique_ptr<Day5> {
+    return std::make_unique<Day5Impl>();
+}
+
+auto Day5Impl::part1() -> std::string {
     const auto input = helper::input::getInput<Day5>(std::source_location::current());
     const auto seedNumbers    = parseSeedNumbers(input.at(0));
     const auto conversionData = parseConversionData(
@@ -176,7 +180,7 @@ auto Day5::part1() -> std::string {
     return std::to_string(locRanges.front().min);
 };
 
-auto Day5::part2() -> std::string {
+auto Day5Impl::part2() -> std::string {
     const auto input = helper::input::getInput<Day5>(std::source_location::current());
     const auto seedNumbers    = parseSeedNumbers(input.at(0));
     const auto conversionData = parseConversionData(

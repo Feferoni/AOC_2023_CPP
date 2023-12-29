@@ -4,7 +4,7 @@
 #include <regex>
 #include <string_view>
 
-#include "day2.h"
+#include "day2Impl.h"
 
 #include "common/inc/errorMsg.h"
 #include "common/inc/inputHelper.h"
@@ -161,7 +161,11 @@ auto setValueIfLarger(std::optional<uint32_t>& valueToSet, const auto currentVal
 }
 }  // namespace
 
-auto Day2::part1() -> std::string {
+auto Day2::getInstance() -> std::unique_ptr<Day2> {
+    return std::make_unique<Day2Impl>();
+}
+
+auto Day2Impl::part1() -> std::string {
     const auto input = helper::input::getInput<Day2>(std::source_location::current());
     const auto games = getGames(input);
 
@@ -169,7 +173,7 @@ auto Day2::part1() -> std::string {
     return std::to_string(playGamePart1(games, gameConfiguration));
 };
 
-auto Day2::part2() -> std::string {
+auto Day2Impl::part2() -> std::string {
     const auto input = helper::input::getInput<Day2>(std::source_location::current());
     const auto games  = getGames(input);
     const auto result = playGamePart2(games);

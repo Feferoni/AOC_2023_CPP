@@ -1,7 +1,7 @@
 #include <algorithm>
 #include <optional>
 
-#include "day3.h"
+#include "day3Impl.h"
 
 #include "common/inc/errorMsg.h"
 #include "common/inc/inputHelper.h"
@@ -221,12 +221,16 @@ constexpr char INVALID_SYMBOL = '.';
 }
 }  // namespace
 
-auto Day3::part1() -> std::string {
+auto Day3::getInstance() -> std::unique_ptr<Day3> {
+    return std::make_unique<Day3Impl>();
+}
+
+auto Day3Impl::part1() -> std::string {
     const auto input = helper::input::getInput<Day3>(std::source_location::current());
     return sumOfPartNumbers(input);
 };
 
-auto Day3::part2() -> std::string {
+auto Day3Impl::part2() -> std::string {
     const auto input = helper::input::getInput<Day3>(std::source_location::current());
     return sumOfGearRatios(input);
 };

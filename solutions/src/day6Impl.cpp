@@ -1,4 +1,4 @@
-#include "day6.h"
+#include "day6Impl.h"
 
 #include "common/inc/errorMsg.h"
 #include "common/inc/inputHelper.h"
@@ -90,13 +90,17 @@ namespace {
 }
 }  // namespace
 
-auto Day6::part1() -> std::string {
+auto Day6::getInstance() -> std::unique_ptr<Day6> {
+    return std::make_unique<Day6Impl>();
+}
+
+auto Day6Impl::part1() -> std::string {
     const auto input = helper::input::getInput<Day6>(std::source_location::current());
     const auto racesData = parseInputToRacesDataPart1(input);
     return std::to_string(countNumberOfWinningScenarios(racesData));
 };
 
-auto Day6::part2() -> std::string {
+auto Day6Impl::part2() -> std::string {
     const auto input = helper::input::getInput<Day6>(std::source_location::current());
     const auto raceData = parseInputToRaceDataPart2(input);
     return std::to_string(countNumberOfWinningScenarios({raceData}));

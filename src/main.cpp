@@ -1,28 +1,38 @@
 #include <chrono>
-#include <concepts>
+#include <concepts> // IWYU pragma: keep
 #include <functional>
 #include <iomanip>
 #include <iostream>
 #include <string>
 
-#include "day1.h"
-#include "day2.h"
-#include "day3.h"
-#include "day4.h"
-#include "day5.h"
-#include "day6.h"
-#include "day7.h"
-#include "day8.h"
+#include "solutions/inc/day1.h"
+#include "solutions/inc/day2.h"
+#include "solutions/inc/day3.h"
+#include "solutions/inc/day4.h"
+#include "solutions/inc/day5.h"
+#include "solutions/inc/day6.h"
+#include "solutions/inc/day7.h"
+#include "solutions/inc/day8.h"
 #include "common/inc/inputHelper.h"
 
 namespace {
 template <class Day>
-concept Solution = requires() {
-    { Day::part1() } -> std::same_as<std::string>;
-    { Day::part2() } -> std::same_as<std::string>;
+concept Solution = requires(Day day) {
+    { Day::getInstance() } -> std::same_as<std::unique_ptr<Day>>;
+    { Day::getInstance()->part1() } -> std::same_as<std::string>;
+    { Day::getInstance()->part2() } -> std::same_as<std::string>;
+    { day.part1() } -> std::same_as<std::string>;
+    { day.part2() } -> std::same_as<std::string>;
 };
 
 static_assert(Solution<Day1>, "Must fulfill concept");
+static_assert(Solution<Day2>, "Must fulfill concept");
+static_assert(Solution<Day3>, "Must fulfill concept");
+static_assert(Solution<Day4>, "Must fulfill concept");
+static_assert(Solution<Day5>, "Must fulfill concept");
+static_assert(Solution<Day6>, "Must fulfill concept");
+static_assert(Solution<Day7>, "Must fulfill concept");
+static_assert(Solution<Day8>, "Must fulfill concept");
 
 struct RunData {
     std::string               answer;
@@ -60,9 +70,11 @@ auto executePart(const std::function<std::string()>& function) -> RunData {
 
 template <Solution Day>
 auto printSolutionFor() -> void {
+    const auto day_up = Day::getInstance();
     const auto className = demangle<Day>();
-    std::cout << className << "::part1 " << executePart(Day::part1) << '\n';
-    std::cout << className << "::part2 " << executePart(Day::part2) << '\n';
+
+    std::cout << className << "::part1 " << executePart([&day_up] () { return (*day_up.get()).part1(); } ) << '\n';
+    std::cout << className << "::part2 " << executePart([&day_up] () { return (*day_up.get()).part2(); } ) << '\n';
 }
 }  // namespace
 
