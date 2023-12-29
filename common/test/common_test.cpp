@@ -174,9 +174,6 @@ TEST_CASE("MergeAdjecentRanges", "Merging") {
         r4, r3, r2, r1, r0, r5};
     const auto rangesAfterMerge = helper::interval::sortAndMergeAdjecentRanges(rangesBeforeMerge);
 
-    std::cout << "Before: " << rangesBeforeMerge << '\n';
-    std::cout << "After: " << rangesAfterMerge << '\n';
-
     REQUIRE(rangesAfterMerge.size() == 3);
     REQUIRE(rangesAfterMerge.at(0) == helper::interval::Range{1, 3});
     REQUIRE(rangesAfterMerge.at(1) == helper::interval::Range{5, 25});
