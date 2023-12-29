@@ -24,7 +24,7 @@ file(GLOB SOLUTION_SOURCES CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/solutions/src/
 file(GLOB COMMON_SOURCES CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/common/src/*.cpp")
 
 set(SOURCE_FILES
-    src/main.cpp
+    main/src/main.cpp
     ${COMMON_SOURCES}
     ${SOLUTION_SOURCES}
 )
