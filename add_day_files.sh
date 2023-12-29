@@ -22,7 +22,7 @@ if ! [ -f "$source_impl_file_path" ]; then
 #include "common/inc/inputHelper.h"
 
 auto Day${day_number}::getInstance() -> std::unique_ptr<Day${day_number}> {
-    return std::make_unique<Day${day_number}>();
+    return std::make_unique<Day${day_number}Impl>();
 }
 
 auto Day${day_number}Impl::part1() -> std::string {
@@ -44,7 +44,7 @@ if ! [ -f "$source_impl_header_path" ]; then
 
 #include <string>
 
-#include "../inc/day${day_number}"
+#include "../inc/day${day_number}.h"
 
 class Day${day_number}Impl : public Day${day_number}
 {
