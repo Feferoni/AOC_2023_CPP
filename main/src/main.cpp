@@ -1,10 +1,11 @@
 #include <chrono>
-#include <concepts> // IWYU pragma: keep
+#include <concepts>  // IWYU pragma: keep
 #include <functional>
 #include <iomanip>
 #include <iostream>
 #include <string>
 
+#include "common/inc/inputHelper.h"
 #include "solutions/inc/day1.h"
 #include "solutions/inc/day2.h"
 #include "solutions/inc/day3.h"
@@ -13,7 +14,7 @@
 #include "solutions/inc/day6.h"
 #include "solutions/inc/day7.h"
 #include "solutions/inc/day8.h"
-#include "common/inc/inputHelper.h"
+#include "solutions/inc/day9.h"
 
 namespace {
 template <class Day>
@@ -33,6 +34,7 @@ static_assert(Solution<Day5>, "Must fulfill concept");
 static_assert(Solution<Day6>, "Must fulfill concept");
 static_assert(Solution<Day7>, "Must fulfill concept");
 static_assert(Solution<Day8>, "Must fulfill concept");
+static_assert(Solution<Day9>, "Must fulfill concept");
 
 struct RunData {
     std::string               answer;
@@ -62,19 +64,21 @@ struct RunData {
 };
 
 auto executePart(const std::function<std::string()>& function) -> RunData {
-    const auto start         = std::chrono::high_resolution_clock::now();
+    const auto start        = std::chrono::high_resolution_clock::now();
     const auto partSolution = function();
-    const auto end           = std::chrono::high_resolution_clock::now();
+    const auto end          = std::chrono::high_resolution_clock::now();
     return {partSolution, std::chrono::duration_cast<std::chrono::microseconds>(end - start)};
 }
 
 template <Solution Day>
 auto printSolutionFor() -> void {
-    const auto day_up = Day::getInstance();
+    const auto day_up    = Day::getInstance();
     const auto className = demangle<Day>();
 
-    std::cout << className << "::part1 " << executePart([&day_up] () { return (*day_up.get()).part1(); } ) << '\n';
-    std::cout << className << "::part2 " << executePart([&day_up] () { return (*day_up.get()).part2(); } ) << '\n';
+    std::cout << className << "::part1 "
+              << executePart([&day_up]() { return (*day_up.get()).part1(); }) << '\n';
+    std::cout << className << "::part2 "
+              << executePart([&day_up]() { return (*day_up.get()).part2(); }) << '\n';
 }
 }  // namespace
 
@@ -87,6 +91,7 @@ auto main() -> int {
     printSolutionFor<Day6>();
     printSolutionFor<Day7>();
     printSolutionFor<Day8>();
+    printSolutionFor<Day9>();
 
     return 0;
 }

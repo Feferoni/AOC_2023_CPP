@@ -7,6 +7,7 @@
 #include "solutions/inc/day6.h"
 #include "solutions/inc/day7.h"
 #include "solutions/inc/day8.h"
+#include "solutions/inc/day9.h"
 
 #include "catch2/catch_all.hpp"  // IWYU pragma: keep
 
@@ -72,4 +73,12 @@ TEST_CASE("Day8_part1", "part1") {
 
 TEST_CASE("Day8_part2", "part2") {
     REQUIRE(Day8::getInstance()->part2() == "6");
+}
+
+TEST_CASE("Day9_part1", "part1") {
+    REQUIRE(Day9::getInstance()->part1() == "");
+}
+
+TEST_CASE("Day9_part2", "part2") {
+    REQUIRE(Day9::getInstance()->part2() == "");
 }
