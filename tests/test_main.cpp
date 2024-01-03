@@ -67,9 +67,9 @@ TEST_CASE("Day7_part2", "part2") {
 }
 
 TEST_CASE("Day8_part1", "part1") {
-    REQUIRE(Day8::getInstance()->part1() == "");
+    REQUIRE(Day8::getInstance()->part1() == "6");
 }
 
 TEST_CASE("Day8_part2", "part2") {
-    REQUIRE(Day8::getInstance()->part2() == "");
+    REQUIRE(Day8::getInstance()->part2() == "6");
 }
