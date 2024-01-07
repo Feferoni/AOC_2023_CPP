@@ -1,7 +1,6 @@
 #include <algorithm>
 #include <map>
 #include <numeric>
-#include <optional>
 #include <regex>
 #include <span>
 
@@ -9,12 +8,6 @@
 
 #include "common/inc/errorMsg.h"
 #include "common/inc/inputHelper.h"
-
-// LLR
-
-// AAA = (BBB, BBB)
-// BBB = (AAA, ZZZ)
-// ZZZ = (ZZZ, ZZZ
 
 enum class Direction : uint32_t {
     Left,
