@@ -1,16 +1,6 @@
 cmake_minimum_required(VERSION 3.12)
 project(tests)
 
-include(FetchContent)
-set(FETCHCONTENT_BASE_DIR ${CMAKE_SOURCE_DIR}/dep_cache)
-FetchContent_Declare(
-  catch2
-  SYSTEM
-  GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-  GIT_TAG v3.4.0
-)
-
-FetchContent_MakeAvailable(catch2)
 
 set(CMAKE_CXX_STANDARD 23)
 

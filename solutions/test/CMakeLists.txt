@@ -1,22 +1,10 @@
 cmake_minimum_required(VERSION 3.12)
 project(solutions_test)
 
-include(FetchContent)
-set(FETCHCONTENT_BASE_DIR ${CMAKE_SOURCE_DIR}/dep_cache)
-FetchContent_Declare(
-  catch2
-  SYSTEM
-  GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-  GIT_TAG v3.4.0
-)
-
-FetchContent_MakeAvailable(catch2)
-
 set(CMAKE_CXX_STANDARD 23)
 
 file(GLOB SRC_FILES CONFIGURE_DEPENDS "../src/*.cpp")
 file(GLOB TEST_SRC_FILES CONFIGURE_DEPENDS "./*.cpp")
-
 file(GLOB SRC_FILES_COMMON CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/common/src/*.cpp")
 
 include_directories(

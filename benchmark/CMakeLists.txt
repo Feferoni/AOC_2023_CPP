@@ -1,16 +1,22 @@
 cmake_minimum_required(VERSION 3.12)
 project(benchmarks)
 
-include(FetchContent)
-FetchContent_Declare(
-  googlebenchmark
-  GIT_REPOSITORY https://github.com/google/benchmark.git
-  GIT_TAG        v1.8.3
-)
-set(BENCHMARK_ENABLE_TESTING OFF) # Disable testing of the benchmark itself
-set(BENCHMARK_ENABLE_EXCEPTIONS OFF) # Optional: Disable exceptions
-set(BENCHMARK_ENABLE_LTO OFF) # Optional: Disable Link Time Optimization
-FetchContent_MakeAvailable(googlebenchmark)
+find_package(benchmark QUIET)
+if(NOT benchmark_FOUND)
+    include(FetchContent)
+    FetchContent_Declare(
+        googlebenchmark
+        GIT_REPOSITORY https://github.com/google/benchmark.git
+        GIT_TAG        v1.8.3
+    )
+    set(BENCHMARK_ENABLE_TESTING OFF) # Disable testing of the benchmark itself
+    set(BENCHMARK_ENABLE_EXCEPTIONS OFF) # Optional: Disable exceptions
+    set(BENCHMARK_ENABLE_LTO OFF) # Optional: Disable Link Time Optimization
+    FetchContent_MakeAvailable(googlebenchmark)
+else()
+    message(STATUS "Using local Google Benchmark")
+endif()
+
 
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/
@@ -29,7 +35,11 @@ set(SOURCE_FILES
 )
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
-target_link_libraries(${PROJECT_NAME} benchmark::benchmark)
+if(benchmark_FOUND)
+    target_link_libraries(${PROJECT_NAME} benchmark)
+else()
+    target_link_libraries(${PROJECT_NAME} benchmark::benchmark)
+endif()
 
 set(COMPILER_FLAGS -O3)
 set(IGNORE_FLAGS)
