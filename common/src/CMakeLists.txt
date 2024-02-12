@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.12)
-project(AdventOfCode2023Common)
+project(common_src)
 
 set(CMAKE_CXX_STANDARD 23)
 

@@ -16,6 +16,10 @@ set(CMAKE_BUILD_TYPE Debug) # Debug, Release, RelWithDebInfo, MinSizeRel
 
 add_compile_options(-Wall -Wpedantic -Wextra -Werror)
 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/
 )
@@ -30,10 +34,9 @@ set(SOURCE_FILES
 )
 
 add_subdirectory(tests)
-add_subdirectory(solutions/src)
-add_subdirectory(solutions/test)
-add_subdirectory(common/src)
-add_subdirectory(common/test)
+add_subdirectory(solutions)
+add_subdirectory(common)
+add_subdirectory(benchmark)
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 
