@@ -1,7 +1,7 @@
 #include <algorithm>
+#include <cassert>
 #include <iostream>
 #include <optional>
-#include <regex>
 #include <string_view>
 
 #include "day2Impl.h"
@@ -11,9 +11,6 @@
 #include "common/inc/stringHelper.h"
 
 namespace {
-constexpr char saveGrabbedCubesPattern[] = "Game (\\d+): (.*)";
-constexpr char getColorInfoPattern[]     = "\\W*?(\\d+) (\\S+)";
-
 struct ColoredCubes {
     uint32_t blue  = 0;
     uint32_t red   = 0;
@@ -41,7 +38,7 @@ enum class Color : int {
     RED
 };
 
-[[nodiscard]] auto getColor(const std::string str) -> Color {
+[[nodiscard]] auto getColor(const std::string_view str) -> Color {
     if (str == "green") return Color::GREEN;
     if (str == "blue") return Color::BLUE;
     if (str == "red") return Color::RED;
@@ -49,29 +46,15 @@ enum class Color : int {
 }
 
 [[nodiscard]] auto splitGameAndGrabs(const std::string& line) -> std::pair<uint32_t, std::string> {
-    std::smatch grabbedCubesMatch;
-    if (!std::regex_search(line, grabbedCubesMatch, std::regex(saveGrabbedCubesPattern)) ||
-        grabbedCubesMatch.empty()) {
-        ERROR_MSG_AND_EXIT("Could not extract pattern: " << saveGrabbedCubesPattern << " from: " << line);
-    }
-
-    return {std::stoul(grabbedCubesMatch[1]), grabbedCubesMatch[2]};
+    const uint32_t colon_pos = line.find_first_of(":");
+    return std::make_pair(std::stoul(line.substr(5, colon_pos - 1)), line.substr(colon_pos + 2));
 }
 
 [[nodiscard]] auto getColorCount(const std::string_view str) -> std::pair<uint32_t, Color> {
-    std::string colorInfo(str);
-    std::regex  regex(getColorInfoPattern);
-
-    std::smatch match;
-    if (!std::regex_search(colorInfo, match, std::regex(getColorInfoPattern)) ||
-        match.empty()) {
-        ERROR_MSG_AND_EXIT("Could not extract pattern: " << getColorInfoPattern << " from: " << str);
-    }
-
-    auto count = std::stoul(match[1]);
-    auto color = getColor(match[2]);
-
-    return {count, color};
+    const std::string_view stripped_str_view = helper::string::stripStrView(str);
+    const auto match = helper::string::splitStrToStrViews(stripped_str_view, " ");
+    assert(match.size() == 2);
+    return {std::stoul(std::string(match[0])), getColor(match[1])};
 }
 
 [[nodiscard]] auto convertToGrabbedCubes(const std::string_view str) -> ColoredCubes {

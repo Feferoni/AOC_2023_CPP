@@ -1,6 +1,7 @@
 #define CATCH_CONFIG_MAIN
 #include "common/inc/intervalHelper.h"
 #include "common/inc/helperTemplates.h"
+#include "common/inc/stringHelper.h"
 #include "catch2/catch_all.hpp"  // IWYU pragma: keep
 
 TEST_CASE("Range_hasOverlap", "hasOverlap") {
@@ -178,4 +179,22 @@ TEST_CASE("MergeAdjecentRanges", "Merging") {
     REQUIRE(rangesAfterMerge.at(0) == helper::interval::Range{1, 3});
     REQUIRE(rangesAfterMerge.at(1) == helper::interval::Range{5, 25});
     REQUIRE(rangesAfterMerge.at(2) == helper::interval::Range{30, 40});
+}
+
+TEST_CASE("StripStrView", "BeginAndEnd") {
+    std::string test_string = "01 ";
+    auto str_view = helper::string::stripStrView(test_string);
+    REQUIRE(str_view == "01");
+
+    test_string = " 01";
+    str_view = helper::string::stripStrView(test_string);
+    REQUIRE(str_view == "01");
+
+    test_string = " 01 ";
+    str_view = helper::string::stripStrView(test_string);
+    REQUIRE(str_view == "01");
+
+    test_string = " 0 1 ";
+    str_view = helper::string::stripStrView(test_string);
+    REQUIRE(str_view == "0 1");
 }

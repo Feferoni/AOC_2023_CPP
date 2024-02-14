@@ -1,22 +1,6 @@
 cmake_minimum_required(VERSION 3.12)
 project(benchmarks)
 
-find_package(benchmark QUIET)
-if(NOT benchmark_FOUND)
-    include(FetchContent)
-    FetchContent_Declare(
-        googlebenchmark
-        GIT_REPOSITORY https://github.com/google/benchmark.git
-        GIT_TAG        v1.8.3
-    )
-    set(BENCHMARK_ENABLE_TESTING OFF) # Disable testing of the benchmark itself
-    set(BENCHMARK_ENABLE_EXCEPTIONS OFF) # Optional: Disable exceptions
-    set(BENCHMARK_ENABLE_LTO OFF) # Optional: Disable Link Time Optimization
-    FetchContent_MakeAvailable(googlebenchmark)
-else()
-    message(STATUS "Using local Google Benchmark")
-endif()
-
 
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/

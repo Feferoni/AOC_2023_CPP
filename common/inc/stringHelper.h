@@ -9,7 +9,9 @@
 
 namespace helper::string {
 [[nodiscard]] auto splitString(const std::string& str, const std::string& delimiter) -> std::vector<std::string>;
-[[nodiscard]] auto splitStrToStrViews(const std::string_view& str, const std::string_view& delimiter) -> std::vector<std::string_view>;
+[[nodiscard]] auto splitStrToStrViews(const std::string_view str, const std::string_view delimiter) -> std::vector<std::string_view>;
+
+[[nodiscard]] auto stripStrView(const std::string_view str_view) -> std::string_view;
 
 template <typename T>
 concept Numeric = std::is_arithmetic<T>::value;
